@@ -32,7 +32,7 @@ For each KB, user can vote it and comment to below KB.
 - npm install -g @angular/cli
 - Visual Studio Code (https://code.visualstudio.com/)
 - Run command: git clone https://github.com/start-angular/SB-Admin-BS4-Angular-8.git admin-app
-# Cachce table SQL
+# Cache table SQL
 ```sql
     CREATE TABLE [dbo].[CacheTable](
         [Id] [nvarchar](449) NOT NULL,
