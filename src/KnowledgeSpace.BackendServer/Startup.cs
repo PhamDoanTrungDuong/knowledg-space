@@ -56,7 +56,7 @@ namespace KnowledgeSpace.BackendServer
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KnowledgeSpace.BackendServer", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KnowledgeSpace API", Version = "v1" });
             });
             services.AddTransient<DbInitializer>();
         }
@@ -68,7 +68,7 @@ namespace KnowledgeSpace.BackendServer
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeSpace.BackendServer v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KnowledgeSpace API v1"));
             }
 
             app.UseHttpsRedirection();
