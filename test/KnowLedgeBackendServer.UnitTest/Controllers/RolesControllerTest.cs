@@ -4,6 +4,7 @@ using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace KnowLedgeBackendServer.UnitTest.Controllers
         public async Task GetRoles_HasData_ReturnSuccess()
         {
             _mockRoleManager.Setup(x => x.Roles)
-                .Returns(_roleSources.AsAsyncQueryable());
+                .Returns(_roleSources.AsQueryable().BuildMock().Object);
             var rolesController = new RolesController(_mockRoleManager.Object);
             var result = await rolesController.GetRoles();
             var okResult = result as OkObjectResult;
@@ -96,7 +97,7 @@ namespace KnowLedgeBackendServer.UnitTest.Controllers
         public async Task GetRolesPaging_NoFilter_ReturnSuccess()
         {
             _mockRoleManager.Setup(x => x.Roles)
-                .Returns(_roleSources.AsAsyncQueryable());
+                .Returns(_roleSources.AsQueryable().BuildMock().Object);
 
             var rolesController = new RolesController(_mockRoleManager.Object);
             var result = await rolesController.GetRolesPaging(null, 1, 2);
@@ -110,7 +111,7 @@ namespace KnowLedgeBackendServer.UnitTest.Controllers
         public async Task GetRolesPaging_HasFilter_ReturnSuccess()
         {
             _mockRoleManager.Setup(x => x.Roles)
-                .Returns(_roleSources.AsAsyncQueryable());
+                .Returns(_roleSources.AsQueryable().BuildMock().Object);
 
             var rolesController = new RolesController(_mockRoleManager.Object);
             var result = await rolesController.GetRolesPaging("test3", 1, 2);
