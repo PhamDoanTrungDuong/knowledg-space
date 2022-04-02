@@ -16,7 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{EC38EE92-E846-461D-B5D0-6372EE75A60B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowLedgeBackendServer.UnitTest", "test\KnowLedgeBackendServer.UnitTest\KnowLedgeBackendServer.UnitTest.csproj", "{855BFD20-ED74-410C-AAF5-38B7C59AD946}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KnowLedgeBackendServer.UnitTest", "test\KnowLedgeBackendServer.UnitTest\KnowLedgeBackendServer.UnitTest.csproj", "{855BFD20-ED74-410C-AAF5-38B7C59AD946}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KnowledgeSpace.ViewModels.UnitTest", "test\KnowledgeSpace.ViewModels.UnitTest\KnowledgeSpace.ViewModels.UnitTest.csproj", "{FF25A023-9485-48F6-9AA7-8AA7B5AA5000}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,12 +42,17 @@ Global
 		{855BFD20-ED74-410C-AAF5-38B7C59AD946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{855BFD20-ED74-410C-AAF5-38B7C59AD946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{855BFD20-ED74-410C-AAF5-38B7C59AD946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF25A023-9485-48F6-9AA7-8AA7B5AA5000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF25A023-9485-48F6-9AA7-8AA7B5AA5000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF25A023-9485-48F6-9AA7-8AA7B5AA5000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF25A023-9485-48F6-9AA7-8AA7B5AA5000}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{855BFD20-ED74-410C-AAF5-38B7C59AD946} = {EC38EE92-E846-461D-B5D0-6372EE75A60B}
+		{FF25A023-9485-48F6-9AA7-8AA7B5AA5000} = {EC38EE92-E846-461D-B5D0-6372EE75A60B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D731B663-4449-40B6-8811-AA66DF13E245}
