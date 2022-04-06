@@ -9,6 +9,7 @@ using KnowledgeSpace.ViewModels.Contents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,14 +24,17 @@ namespace KnowledgeSpace.BackendServer.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ISequenceService _sequenceService;
         private readonly IStorageService _storageService;
+        private readonly ILogger<KnowledgeBasesController> _logger;
 
         public KnowledgeBasesController(ApplicationDbContext context,
             ISequenceService sequenceService,
-            IStorageService storageService)
+            IStorageService storageService,
+            ILogger<KnowledgeBasesController> logger)
         {
             _context = context;
             _sequenceService = sequenceService;
             _storageService = storageService;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         [HttpPost]
@@ -38,6 +42,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [ApiValidationFilter]
         public async Task<IActionResult> PostKnowledgeBase([FromForm] KnowledgeBaseCreateRequest request)
         {
+            _logger.LogInformation("Begin PostKnowledgeBase API");
             KnowledgeBase knowledgeBase = CreateKnowledgeBaseEntity(request);
             knowledgeBase.Id = await _sequenceService.GetKnowledgeBaseNewId();
 
@@ -62,6 +67,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
             if (result > 0)
             {
+                _logger.LogInformation("End PostKnowledgeBase API - Success");
                 return CreatedAtAction(nameof(GetById), new
                 {
                     id = knowledgeBase.Id
@@ -69,6 +75,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             }
             else
             {
+                _logger.LogInformation("End PostKnowledgeBase API - Failed");
                 return BadRequest(new ApiBadRequestResponse("Create knowledge failed"));
             }
         }
