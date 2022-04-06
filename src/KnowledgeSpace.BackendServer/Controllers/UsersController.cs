@@ -2,6 +2,7 @@
 using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
+using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Systems;
 using Microsoft.AspNetCore.Http;
@@ -32,6 +33,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         [HttpPost]
         [ClaimRequirement(FunctionCode.SYSTEM_USER, CommandCode.CREATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PostUser(UserCreateRequest request)
         {
             var user = new User()
@@ -51,11 +53,12 @@ namespace KnowledgeSpace.BackendServer.Controllers
             }
             else
             {
-                return BadRequest(result.Errors);
+                return BadRequest(new ApiBadRequestResponse(result));
             }
         }
 
         [HttpGet]
+        [ClaimRequirement(FunctionCode.SYSTEM_USER, CommandCode.VIEW)]
         public async Task<IActionResult> GetUsers()
         {
             var users = _userManager.Users;
@@ -115,7 +118,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
             var userVm = new UserVm()
             {
@@ -136,7 +139,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
@@ -148,16 +151,17 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(result.Errors);
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
         [HttpPut("{id}/change-password")]
         [ClaimRequirement(FunctionCode.SYSTEM_USER, CommandCode.UPDATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PutUserPassword(string id, [FromBody] UserPasswordChangeRequest request)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse($"Cannot found user with id: {id}"));
 
             var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
 
@@ -165,7 +169,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             {
                 return NoContent();
             }
-            return BadRequest(result.Errors);
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
         [HttpDelete("{id}")]
@@ -192,7 +196,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 };
                 return Ok(uservm);
             }
-            return BadRequest(result.Errors);
+            return BadRequest(new ApiBadRequestResponse(result));
         }
 
         [HttpGet("{userId}/menu")]
@@ -201,9 +205,11 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             var roles = await _userManager.GetRolesAsync(user);
             var query = from f in _context.Functions
-                        join p in _context.Permissions on f.Id equals p.FunctionId
+                        join p in _context.Permissions
+                            on f.Id equals p.FunctionId
                         join r in _roleManager.Roles on p.RoleId equals r.Id
-                        join a in _context.Commands on p.CommandId equals a.Id
+                        join a in _context.Commands
+                            on p.CommandId equals a.Id
                         where roles.Contains(r.Name) && a.Id == "VIEW"
                         select new FunctionVm
                         {
