@@ -108,8 +108,22 @@
     },
     "defaultProject": "test-ng7",
     "schematics": {
-        "@schematics/angular:directive": {
+        "@schematics/angular:component": {
+            "style": "scss",
+            "skipTests": true
+          },
+          "@schematics/angular:class": {
+            "skipTests": true
+          },
+          "@schematics/angular:directive": {
+            "skipTests": true,
             "prefix": "app"
-        }
+          },
+          "@schematics/angular:pipe": {
+            "skipTests": true
+          },
+          "@schematics/angular:service": {
+            "skipTests": true
+          }
     }
 }

@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from './../../../shared/models';
+import { UserService } from './../../../shared/services';
 
 @Component({
-  selector: 'users',
+  selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
 
-  constructor() { }
+  public users$: Observable<User[]>;
 
-  ngOnInit(): void {
+  constructor(private userService: UserService) { }
+
+  ngOnInit() {
+    this.users$ = this.userService.getAll();
   }
-
 }
