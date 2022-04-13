@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'monthly-new-kbs',
+  selector: 'app-monthly-new-kbs',
   templateUrl: './monthly-new-kbs.component.html',
   styleUrls: ['./monthly-new-kbs.component.css']
 })

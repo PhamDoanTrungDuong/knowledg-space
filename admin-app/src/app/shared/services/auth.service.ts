@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UserManager, UserManagerSettings, User } from 'oidc-client';
 import { BehaviorSubject } from 'rxjs';
+import { Profile } from '../models';
 import { BaseService } from './base.service';
 
 @Injectable({
@@ -35,6 +36,10 @@ export class AuthService extends BaseService {
 
     isAuthenticated(): boolean {
         return this.user != null && !this.user.expired;
+    }
+
+    get profile(): Profile {
+        return this.user != null ? this.user.profile : null;
     }
 
     get authorizationHeaderValue(): string {

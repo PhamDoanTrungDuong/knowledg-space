@@ -10,15 +10,15 @@ const routes: Routes = [
         component: MonthlyNewKbsComponent
     },
     {
-        path: 'monthly-new-kbs',
+        path: 'monthly-newkbs',
         component: MonthlyNewKbsComponent
     },
     {
-        path: 'monthly-new-members',
+        path: 'monthly-registers',
         component: MonthlyNewMembersComponent
     },
     {
-        path: 'monthly-new-comments',
+        path: 'monthly-comments',
         component: MonthlyNewCommentsComponent
     }
 ];

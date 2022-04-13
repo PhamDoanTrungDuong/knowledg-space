@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'knowledge-bases',
+  selector: 'app-knowledge-bases',
   templateUrl: './knowledge-bases.component.html',
   styleUrls: ['./knowledge-bases.component.css']
 })
