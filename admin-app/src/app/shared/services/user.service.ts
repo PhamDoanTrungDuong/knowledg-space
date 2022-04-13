@@ -7,7 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { User } from '../models';
 
 @Injectable({ providedIn: 'root' })
-export class UserService extends BaseService {
+export class UsersService extends BaseService {
     constructor(private http: HttpClient, private utilities: UtilitiesService) {
         super();
     }

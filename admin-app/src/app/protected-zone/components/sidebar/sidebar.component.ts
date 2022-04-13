@@ -1,5 +1,5 @@
 import { AuthService } from './../../../shared/services/auth.service';
-import { UserService } from './../../../shared/services/user.service';
+import { UsersService } from './../../../shared/services/user.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
     constructor(
         private translate: TranslateService,
         public router: Router,
-        private userService: UserService,
+        private userService: UsersService,
         private auth: AuthService
     ) {
         this.loadMenu();
@@ -36,7 +36,7 @@ export class SidebarComponent implements OnInit {
         // console.log(profile);
         this.userService.getMenuByUser(profile.sub).subscribe((res: Function[]) => {
             this.functions = res;
-            console.log(this.functions);
+            // console.log(this.functions);
         });
     }
     ngOnInit() {
