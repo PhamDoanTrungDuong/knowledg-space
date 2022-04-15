@@ -3,7 +3,7 @@ import { Component, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
-import { MessageConstants } from '../../constants';
+import { MessageConstants } from '../../../../shared/constants';
 
 @Component({
   selector: 'app-roles-detail',
@@ -41,14 +41,14 @@ export class RolesDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.entityForm = this.fb.group({
-      'id': new FormControl({ value: '', disabled: true }, Validators.compose([
+      'id': ['', [
         Validators.required,
         Validators.maxLength(50)
-      ])),
-      'name': new FormControl(' ', Validators.compose([
+      ]],
+      'name': ['', [
         Validators.required,
         Validators.maxLength(50)
-      ]))
+      ]],
     });
     if (this.entityId) {
       this.dialogTitle = 'Cập nhật';

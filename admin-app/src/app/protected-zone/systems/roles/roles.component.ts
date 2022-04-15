@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Pagination, Role } from './../../../shared/models';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { MessageConstants } from '../constants';
+import { MessageConstants } from '../../../shared/constants';
 import { RolesDetailComponent } from './roles-detail/roles-detail.component';
 @Component({
     selector: 'app-roles',
@@ -45,12 +45,32 @@ export class RolesComponent implements OnInit, OnDestroy {
                     this.processLoadData(selectedId, response);
                     setTimeout(() => {
                         this.blockedPanel = false;
-                    }, 1000);
+                    }, 500);
                 },
                 (error) => {
                     setTimeout(() => {
                         this.blockedPanel = false;
-                    }, 1000);
+                    }, 500);
+                }
+            )
+        );
+    }
+
+    Reset(selectedId = null){
+        this.blockedPanel = true;
+        this.subscription.add(
+            this.rolesService.getAllPaging('', this.pageIndex, this.pageSize).subscribe(
+                (response: Pagination<Role>) => {
+                    this.processLoadData(selectedId, response);
+                    this.keyword = '';
+                    setTimeout(() => {
+                        this.blockedPanel = false;
+                    }, 500);
+                },
+                (error) => {
+                    setTimeout(() => {
+                        this.blockedPanel = false;
+                    }, 500);
                 }
             )
         );
@@ -132,6 +152,8 @@ export class RolesComponent implements OnInit, OnDestroy {
             )
         );
     }
+
+    
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();

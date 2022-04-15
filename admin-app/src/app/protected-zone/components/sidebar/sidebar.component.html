@@ -5,9 +5,9 @@
                 <i class="fa {{ func.icon }}"></i>&nbsp;
                 <span>{{ func.name }}</span>
             </a>
-            <li [class.expand]="showMenu === func.id" class="nested" *ngFor="let subFunc of func.children">
+            <li [class.expand]="showMenu === func.id" class="nested" >
                 <ul class="submenu">
-                    <li>
+                    <li *ngFor="let subFunc of func.children">
                         <a href="javascript:void(0)" [routerLink]="[subFunc.url]" [routerLinkActive]="[router-link-active]" >
                             <i class="fa {{ subFunc.icon }}"></i>&nbsp;
                             <span>{{ subFunc.name }}</span>

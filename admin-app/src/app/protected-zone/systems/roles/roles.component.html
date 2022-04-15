@@ -1,34 +1,40 @@
 <p>Danh sách nhóm quyền</p>
 <div class="animated fadeIn">
     <p-panel #pnl>
-        <p-header>
-            <div class="ui-g-6">
-                <button appPermission appFunction="SYSTEM_ROLE" appAction="CREATE" pButton type="button" class="p-button-sm" label="Thêm"
-                    icon="fa fa-plus" (click)="showAddModal()"></button>
-                <button appPermission appFunction="SYSTEM_ROLE" appAction="DELETE" pButton type="button" label="Xóa"
-                    icon="fa fa-trash" class="p-button-danger p-button-sm" *ngIf="selectedItems.length > 0"
-                    (click)="deleteItems()"></button>
-                <button appPermission appFunction="SYSTEM_ROLE" appAction="UPDATE" pButton type="button" label="Sửa"
-                    icon="fa fa-edit" class="p-button-warning p-button-sm" *ngIf="selectedItems.length == 1"
-                    (click)="showEditModal()"></button>
-            </div>
-            <div class="ui-g-6">
-                <input style="width: 100%;" pInputText (keyup.enter)="loadData()" [(ngModel)]="keyword"
-                    placeholder="Nhập từ khóa..." type="text">
+        <p-header class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <button appPermission appFunction="SYSTEM_ROLE" appAction="CREATE" pButton type="button"
+                        class="p-button-sm me-2" label="Thêm" icon="fa fa-plus" (click)="showAddModal()"></button>
+                    <button appPermission appFunction="SYSTEM_ROLE" appAction="DELETE" pButton type="button" label="Xóa"
+                        icon="fa fa-trash" class="p-button-danger p-button-sm me-2" *ngIf="selectedItems.length > 0"
+                        (click)="deleteItems()"></button>
+                    <button appPermission appFunction="SYSTEM_ROLE" appAction="UPDATE" pButton type="button" label="Sửa"
+                        icon="fa fa-edit" class="p-button-warning p-button-sm me-2" *ngIf="selectedItems.length == 1"
+                        (click)="showEditModal()"></button>
+                    <button appPermission appFunction="SYSTEM_ROLE" appAction="RESET" pButton type="button"
+                        class="p-button-sm p-button-success" label="Reset" icon="fa fa-refresh" (click)="Reset()"></button>
+                </div>
+                <div class="col-md-6">
+                    <input style="width: 100%;" class="form-control"  pInputText (keyup.enter)="loadData()" [(ngModel)]="keyword"
+                        placeholder="Nhập từ khóa..." type="text">
+                </div>
             </div>
         </p-header>
 
-        <p-table #dt [value]="items" selectionMode="multiple" [(selection)]="selectedItems" [metaKeySelection]="true" [responsive]="true" [scrollable]="true">
+        <p-table #dt [value]="items" selectionMode="multiple" [(selection)]="selectedItems" [metaKeySelection]="true"
+            [responsive]="true" [scrollable]="true">
             <ng-template pTemplate="header">
                 <tr>
                     <th style="width: 35px">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        <span class="ms-2">Lựa Chọn</span>
                     </th>
-                    <th [pSortableColumn]="'Name'">Mã
-                        <p-sortIcon [field]="'Name'"></p-sortIcon>
+                    <th [pSortableColumn]="'id'">Mã
+                        <p-sortIcon [field]="'id'"></p-sortIcon>
                     </th>
-                    <th [pSortableColumn]="'Description'">Mô tả nhóm
-                        <p-sortIcon [field]="'Description'"></p-sortIcon>
+                    <th [pSortableColumn]="'name'">Mô tả nhóm
+                        <p-sortIcon [field]="'name'"></p-sortIcon>
                     </th>
                 </tr>
             </ng-template>

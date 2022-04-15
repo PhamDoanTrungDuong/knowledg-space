@@ -7,14 +7,13 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./validation-message.component.scss']
 })
 export class ValidationMessageComponent implements OnInit {
-
   @Input() entityForm: FormGroup;
   @Input() fieldName: string;
   @Input() validationMessages: any;
   constructor() { }
 
   ngOnInit(): void {
-
+    // console.log(this.entityForm.controls[this.fieldName].errors);
   }
 
 }

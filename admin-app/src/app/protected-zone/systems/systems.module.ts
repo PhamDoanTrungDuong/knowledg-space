@@ -1,7 +1,7 @@
 import { ValidationMessageModule } from './../../shared/modules/validation-message/validation-message.module';
 import { NotificationService } from './../../shared/services/notifications.service';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FunctionsComponent } from './functions/functions.component';
 import { UsersComponent } from './users/users.component';
 import { RolesComponent } from './roles/roles.component';
@@ -16,7 +16,12 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { RolesDetailComponent } from './roles/roles-detail/roles-detail.component';
 import { BsModalService, ModalModule  } from 'ngx-bootstrap/modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { UsersDetailComponent } from './users/users-detail/users-detail.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { RolesAssignComponent } from './users/roles-assign/roles-assign.component';
+import {CheckboxModule} from 'primeng/checkbox';
+import {KeyFilterModule} from 'primeng/keyfilter';
+import {CalendarModule} from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -25,6 +30,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     RolesComponent,
     PermissionsComponent,
     RolesDetailComponent,
+    UsersDetailComponent,
+    RolesAssignComponent,
   ],
   imports: [
     CommonModule,
@@ -38,8 +45,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
     ValidationMessageModule,
+    InputTextModule,
+    CheckboxModule,
+    KeyFilterModule,
+    CalendarModule,
     ModalModule.forRoot()
   ],
-  providers: [ NotificationService, BsModalService ],
+  providers: [ NotificationService, BsModalService, DatePipe ],
 })
 export class SystemsModule { }

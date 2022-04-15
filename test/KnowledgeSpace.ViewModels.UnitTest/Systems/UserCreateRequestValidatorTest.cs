@@ -17,8 +17,8 @@ namespace KnowledgeSpace.ViewModels.UnitTest.Systems
         {
             request = new UserCreateRequest()
             {
-                Dob = DateTime.Now,
-                Email = "pdtduong@gmail.com",
+                Dob = DateTime.Now.ToString(),
+                Email = "tedu.international@gmail.com",
                 FirstName = "Test",
                 LastName = "test",
                 Password = "Admin@123",
@@ -41,18 +41,6 @@ namespace KnowledgeSpace.ViewModels.UnitTest.Systems
         public void Should_Error_Result_When_Miss_UserName(string userName)
         {
             request.UserName = userName;
-            var result = validator.Validate(request);
-            Assert.False(result.IsValid);
-        }
-
-
-        [Theory]
-        [InlineData("pdtduogmail.com")]
-        [InlineData("")]
-        [InlineData(null)]
-        public void Should_Error_Result_When_Valid_Email(string email)
-        {
-            request.Email = email;
             var result = validator.Validate(request);
             Assert.False(result.IsValid);
         }
