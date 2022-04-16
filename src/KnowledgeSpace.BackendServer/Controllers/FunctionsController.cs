@@ -21,7 +21,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<FunctionsController> _logger;
 
-        public FunctionsController(ApplicationDbContext context, ILogger<FunctionsController> logger)
+        public FunctionsController(ApplicationDbContext context,
+            ILogger<FunctionsController> logger)
         {
             _context = context;
             _logger = logger;
@@ -36,7 +37,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
             var dbFunction = await _context.Functions.FindAsync(request.Id);
             if (dbFunction != null)
-                return BadRequest(new ApiBadRequestResponse($"Function with id { request.Id } is existed."));
+                return BadRequest(new ApiBadRequestResponse($"Function with id {request.Id} is existed."));
 
             var function = new Function()
             {
@@ -45,7 +46,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 ParentId = request.ParentId,
                 SortOrder = request.SortOrder,
                 Url = request.Url,
-                Icon  = request.Icon
+                Icon = request.Icon
             };
             _context.Functions.Add(function);
             var result = await _context.SaveChangesAsync();
@@ -69,6 +70,25 @@ namespace KnowledgeSpace.BackendServer.Controllers
         public async Task<IActionResult> GetFunctions()
         {
             var functions = _context.Functions;
+
+            var functionvms = await functions.Select(u => new FunctionVm()
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Url = u.Url,
+                SortOrder = u.SortOrder,
+                ParentId = u.ParentId,
+                Icon = u.Icon
+            }).ToListAsync();
+
+            return Ok(functionvms);
+        }
+
+        [HttpGet("{functionId}/parents")]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
+        public async Task<IActionResult> GetFunctionsByParentId(string functionId)
+        {
+            var functions = _context.Functions.Where(x => x.ParentId == functionId);
 
             var functionvms = await functions.Select(u => new FunctionVm()
             {
@@ -122,7 +142,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         {
             var function = await _context.Functions.FindAsync(id);
             if (function == null)
-                return NotFound();
+                return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
             var functionVm = new FunctionVm()
             {
@@ -138,6 +158,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         [HttpPut("{id}")]
         [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.UPDATE)]
+        [ApiValidationFilter]
         public async Task<IActionResult> PutFunction(string id, [FromBody] FunctionCreateRequest request)
         {
             var function = await _context.Functions.FindAsync(id);
@@ -148,7 +169,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             function.ParentId = request.ParentId;
             function.SortOrder = request.SortOrder;
             function.Url = request.Url;
-            function.Icon = function.Icon;
+            function.Icon = request.Icon;
 
             _context.Functions.Update(function);
             var result = await _context.SaveChangesAsync();
@@ -169,6 +190,10 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 return NotFound(new ApiNotFoundResponse($"Cannot found function with id {id}"));
 
             _context.Functions.Remove(function);
+
+            var commands = _context.CommandInFunctions.Where(x => x.FunctionId == id);
+            _context.CommandInFunctions.RemoveRange(commands);
+
             var result = await _context.SaveChangesAsync();
             if (result > 0)
             {
@@ -188,7 +213,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
         [HttpGet("{functionId}/commands")]
         [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
-        public async Task<IActionResult> GetCommantsInFunction(string functionId)
+        public async Task<IActionResult> GetCommandsInFunction(string functionId)
         {
             var query = from a in _context.Commands
                         join cif in _context.CommandInFunctions on a.Id equals cif.CommandId into result1
@@ -213,52 +238,48 @@ namespace KnowledgeSpace.BackendServer.Controllers
             return Ok(data);
         }
 
-        [HttpGet("{functionId}/commands/not-in-function")]
-        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.VIEW)]
-        public async Task<IActionResult> GetCommantsNotInFunction(string functionId)
-        {
-            var query = from a in _context.Commands
-                        join cif in _context.CommandInFunctions on a.Id equals cif.CommandId into result1
-                        from commandInFunction in result1.DefaultIfEmpty()
-                        join f in _context.Functions on commandInFunction.FunctionId equals f.Id into result2
-                        from function in result2.DefaultIfEmpty()
-                        select new
-                        {
-                            a.Id,
-                            a.Name,
-                            commandInFunction.FunctionId
-                        };
-
-            query = query.Where(x => x.FunctionId != functionId).Distinct();
-
-            var data = await query.Select(x => new CommandVm()
-            {
-                Id = x.Id,
-                Name = x.Name
-            }).ToListAsync();
-
-            return Ok(data);
-        }
-
         [HttpPost("{functionId}/commands")]
         [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.CREATE)]
-        public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] AddCommandToFunctionRequest request)
+        [ApiValidationFilter]
+        public async Task<IActionResult> PostCommandToFunction(string functionId, [FromBody] CommandAssignRequest request)
         {
-            var commandInFunction = await _context.CommandInFunctions.FindAsync(request.CommandId, request.FunctionId);
-            if (commandInFunction != null)
-                return BadRequest(new ApiBadRequestResponse($"This command has been added to function"));
-
-            var entity = new CommandInFunction()
+            foreach (var commandId in request.CommandIds)
             {
-                CommandId = request.CommandId,
-                FunctionId = request.FunctionId
-            };
-            _context.CommandInFunctions.Add(entity);
+                if (await _context.CommandInFunctions.FindAsync(commandId, functionId) != null)
+                    return BadRequest(new ApiBadRequestResponse("This command has been existed in function"));
+
+                var entity = new CommandInFunction()
+                {
+                    CommandId = commandId,
+                    FunctionId = functionId
+                };
+
+                _context.CommandInFunctions.Add(entity);
+            }
+
+            if (request.AddToAllFunctions)
+            {
+                var otherFunctions = _context.Functions.Where(x => x.Id != functionId);
+                foreach (var function in otherFunctions)
+                {
+                    foreach (var commandId in request.CommandIds)
+                    {
+                        if (await _context.CommandInFunctions.FindAsync(request.CommandIds, function.Id) == null)
+                        {
+                            _context.CommandInFunctions.Add(new CommandInFunction()
+                            {
+                                CommandId = commandId,
+                                FunctionId = function.Id
+                            });
+                        }
+                    }
+                }
+            }
             var result = await _context.SaveChangesAsync();
 
             if (result > 0)
             {
-                return CreatedAtAction(nameof(GetById), new { commandId = request.CommandId, functionId = request.FunctionId }, request);
+                return CreatedAtAction(nameof(GetById), new { request.CommandIds, functionId });
             }
             else
             {
@@ -266,20 +287,19 @@ namespace KnowledgeSpace.BackendServer.Controllers
             }
         }
 
-        [HttpDelete("{functionId}/commands/{commandId}")]
-        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.DELETE)]
-        public async Task<IActionResult> DeleteCommandToFunction(string functionId, string commandId)
+        [HttpDelete("{functionId}/commands")]
+        [ClaimRequirement(FunctionCode.SYSTEM_FUNCTION, CommandCode.UPDATE)]
+        public async Task<IActionResult> DeleteCommandToFunction(string functionId, [FromQuery] CommandAssignRequest request)
         {
-            var commandInFunction = await _context.CommandInFunctions.FindAsync(functionId, commandId);
-            if (commandInFunction == null)
-                return BadRequest(new ApiBadRequestResponse($"This command is not existed in function"));
-
-            var entity = new CommandInFunction()
+            foreach (var commandId in request.CommandIds)
             {
-                CommandId = commandId,
-                FunctionId = functionId
-            };
-            _context.CommandInFunctions.Remove(entity);
+                var entity = await _context.CommandInFunctions.FindAsync(commandId, functionId);
+                if (entity == null)
+                    return BadRequest(new ApiBadRequestResponse("This command is not existed in function"));
+
+                _context.CommandInFunctions.Remove(entity);
+            }
+
             var result = await _context.SaveChangesAsync();
 
             if (result > 0)

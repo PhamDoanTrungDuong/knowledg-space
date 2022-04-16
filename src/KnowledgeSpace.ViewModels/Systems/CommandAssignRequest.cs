@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace KnowledgeSpace.ViewModels.Systems
 {
-    public class AddCommandToFunctionRequest
+    public class CommandAssignRequest
     {
-        public string CommandId { get; set; }
+        public string[] CommandIds { get; set; }
 
-        public string FunctionId { get; set; }
+        public bool AddToAllFunctions { get; set; }
     }
 }
