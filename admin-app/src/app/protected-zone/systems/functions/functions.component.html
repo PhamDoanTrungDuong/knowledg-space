@@ -6,11 +6,11 @@
                     <button appPermission appFunction="SYSTEM_FUNCTION" appAction="CREATE" pButton type="button"
                         label="Thêm" icon="fa fa-plus" class="p-button-sm me-2" (click)="showAddModal()"></button>
                     <button appPermission appFunction="SYSTEM_FUNCTION" appAction="DELETE" pButton type="button"
-                        label="Xóa" icon="fa fa-trash" class="p-button-sm me-2 p-button-danger" *ngIf="selectedItems.length > 0"
-                        (click)="deleteItems()"></button>
+                        label="Xóa" icon="fa fa-trash" class="p-button-sm me-2 p-button-danger"
+                        *ngIf="selectedItems.length > 0" (click)="deleteItems()"></button>
                     <button appPermission appFunction="SYSTEM_FUNCTION" appAction="UPDATE" pButton type="button"
-                        label="Sửa" icon="fa fa-edit" class="p-button-sm me-2 p-button-warning" *ngIf="selectedItems.length== 1"
-                        (click)="showEditModal()"></button>
+                        label="Sửa" icon="fa fa-edit" class="p-button-sm me-2 p-button-warning"
+                        *ngIf="selectedItems.length== 1" (click)="showEditModal()"></button>
                 </div>
                 <div class="col-md-6 pt-3">
                     <p-checkbox label="Hiển thị hành động" [(ngModel)]="showCommandGrid" (click)="togglePanel()"
@@ -20,7 +20,7 @@
             </div>
 
         </p-header>
-        <p-treeTable *ngIf="items" [value]="items" selectionMode="multiple" [(selection)]="selectedItems"
+        <p-treeTable *ngIf="items" [value]="items" dataKey="id" selectionMode="multiple" [(selection)]="selectedItems"
             [metaKeySelection]="true" (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnSelect($event)"
             [scrollable]="true">
             <ng-template pTemplate="header">
@@ -33,7 +33,6 @@
                     <th>Thứ tự</th>
                 </tr>
             </ng-template>
-
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
                 <tr [ttSelectableRow]="rowNode">
                     <td style="width: 10%;">
@@ -62,10 +61,11 @@
     <p-panel #pnlCommand *ngIf="showCommandGrid">
         <p-header>
             <div class="pcol-12">
-                <button pButton type="button" label="Thêm hành động" class="p-button-sm me-2" icon="fa fa-plus" *ngIf="selectedItems.length == 1"
-                    (click)="addCommandsToFunction()"></button>
-                <button pButton type="button" label="Xóa hành động" icon="fa fa-trash" class="p-button-danger p-button-sm me-2"
-                    *ngIf="selectedCommandItems.length > 0" (click)="removeCommands()"></button>
+                <button pButton type="button" label="Thêm hành động" class="p-button-sm me-2" icon="fa fa-plus"
+                    *ngIf="selectedItems.length == 1" (click)="addCommandsToFunction()"></button>
+                <button pButton type="button" label="Xóa hành động" icon="fa fa-trash"
+                    class="p-button-danger p-button-sm me-2" *ngIf="selectedCommandItems.length > 0"
+                    (click)="removeCommands()"></button>
             </div>
         </p-header>
         <p-table #dt [value]="commands" selectionMode="multiple" [metaKeySelection]="true"

@@ -56,7 +56,7 @@ export class RolesComponent implements OnInit, OnDestroy {
         );
     }
 
-    Reset(selectedId = null){
+    Reset(selectedId = null) {
         this.blockedPanel = true;
         this.subscription.add(
             this.rolesService.getAllPaging('', this.pageIndex, this.pageSize).subscribe(
@@ -152,8 +152,6 @@ export class RolesComponent implements OnInit, OnDestroy {
             )
         );
     }
-
-    
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
