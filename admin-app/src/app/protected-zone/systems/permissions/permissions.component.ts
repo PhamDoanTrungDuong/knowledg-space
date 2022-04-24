@@ -139,6 +139,7 @@ export class PermissionsComponent implements OnInit, OnDestroy {
 
   }
   checkChanged(checked: boolean, commandId: string, functionId: string, parentId: string) {
+    console.log("seclect Views: ", checked)
     if (commandId === SystemConstants.VIEW_ACTION) {
       this.selectedViews = [];
       if (checked) {
@@ -248,9 +249,11 @@ export class PermissionsComponent implements OnInit, OnDestroy {
         }
       }
     }
+    console.log(this.selectedViews);
 
   }
   selectAll(checked: boolean, uniqueCode: string) {
+    console.log("seclect ALL: ", checked)
     if (uniqueCode === SystemConstants.VIEW_ACTION) {
       this.selectedViews = [];
       if (checked) {

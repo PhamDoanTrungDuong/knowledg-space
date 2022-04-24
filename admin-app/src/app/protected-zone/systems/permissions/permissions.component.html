@@ -19,7 +19,7 @@
                 </div>
             </div>
         </p-panel>
-        <p-treeTable [value]="functions" selectionMode="checkbox" dataKey="id">
+        <p-treeTable [value]="functions" selectionMode="checkbox" dataKey="name">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Chức năng</th>
@@ -57,7 +57,7 @@
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
                 <tr [ttSelectableRow]="rowNode">
                     <td>
-                        <p-treeTableToggler  [rowNode]="rowNode"></p-treeTableToggler>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                         {{rowData.name}}
                     </td>
                     <th style="width: 100px; text-align: center">

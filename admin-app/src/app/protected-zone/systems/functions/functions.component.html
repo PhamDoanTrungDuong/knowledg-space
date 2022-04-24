@@ -61,9 +61,9 @@
     <p-panel #pnlCommand *ngIf="showCommandGrid">
         <p-header>
             <div class="pcol-12">
-                <button pButton type="button" label="Thêm hành động" class="p-button-sm me-2" icon="fa fa-plus"
+                <button pButton appPermission appFunction="SYSTEM_FUNCTION" appAction="UPDATE" type="button" label="Thêm hành động" class="p-button-sm me-2" icon="fa fa-plus"
                     *ngIf="selectedItems.length == 1" (click)="addCommandsToFunction()"></button>
-                <button pButton type="button" label="Xóa hành động" icon="fa fa-trash"
+                <button appPermission appFunction="SYSTEM_FUNCTION" appAction="UPDATE" pButton type="button" label="Xóa hành động" icon="fa fa-trash"
                     class="p-button-danger p-button-sm me-2" *ngIf="selectedCommandItems.length > 0"
                     (click)="removeCommands()"></button>
             </div>

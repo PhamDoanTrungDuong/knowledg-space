@@ -85,9 +85,9 @@
     <p-panel #pnlRole *ngIf="showRoleAssign">
         <p-header>
             <div class="pcol-12">
-                <button appPermission class="p-button-sm me-2" appFunction="ROLE" appAction="CREATE" pButton type="button" label="Thêm quyền"
+                <button appPermission class="p-button-sm me-2" appFunction="SYSTEM_USER" appAction="UPDATE" pButton type="button" label="Thêm quyền"
                     icon="fa fa-plus" *ngIf="selectedItems !=null" (click)="addUserRole()"></button>
-                <button appPermission class="p-button-sm p-button-danger me-2" appFunction="ROLE" appAction="DELETE" pButton type="button" label="Xóa quyền"
+                <button appPermission class="p-button-sm p-button-danger me-2" appFunction="SYSTEM_USER" appAction="UPDATE" pButton type="button" label="Xóa quyền"
                     icon="fa fa-remove" *ngIf="selectedRoleItems.length>0"
                     (click)="removeRoles()"></button>
             </div>
