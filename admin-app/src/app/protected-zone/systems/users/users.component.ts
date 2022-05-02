@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Pagination, User } from './../../../shared/models';
 import { NotificationService, UsersService } from './../../../shared/services';
-import { Function } from './../../../shared/models';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UsersDetailComponent } from './users-detail/users-detail.component';
 import { RolesAssignComponent } from './roles-assign/roles-assign.component';
