@@ -55,7 +55,8 @@
                         <input type="number" pInputText formControlName="sortOrder">
                     </div>
                     <div class="ui-grid-col-4">
-
+                        <app-validation-message [entityForm]="entityForm" fieldName="sortOrder"
+                        [validationMessages]="validation_messages"></app-validation-message>
                     </div>
                 </div>
 
@@ -64,8 +65,7 @@
                         <span class="required">Danh mục cha:</span>
                     </div>
                     <div class="ui-grid-col-6">
-                        <p-dropdown [options]="categories" [style]="{'width':'100%'}" placeholder="Chọn danh mục"
-                            optionLabel="name" filter="true" [showClear]="true" formControlName="parentId">
+                        <p-dropdown [options]="categories" [style]="{'width':'100%'}" placeholder="Chọn danh mục" filter="true" [showClear]="true" formControlName="parentId">
                         </p-dropdown>
                     </div>
                     <div class="ui-grid-col-4">

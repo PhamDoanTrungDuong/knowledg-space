@@ -1,23 +1,29 @@
-<p>Danh sách bài đăng</p>
+<p>{{screenTitle}}</p>
 <div class="animated fadeIn">
     <p-panel #pnl>
         <p-header class="container">
-           <div class="row">
-            <div class="col-md-6">
-                <button appPermission appFunction="CONTENT_KNOWLEDGEBASE" appAction="CREATE" pButton type="button"
-                    label="Thêm" icon="fa fa-plus" class="p-button-sm me-2" (click)="showAddModal()"></button>
-                <button appPermission appFunction="CONTENT_KNOWLEDGEBASE" appAction="DELETE" pButton type="button"
-                    label="Xóa" icon="fa fa-trash" class="p-button-danger p-button-sm me-2" *ngIf="selectedItems.length > 0"
-                    (click)="deleteItems()"></button>
-                <button appPermission appFunction="CONTENT_KNOWLEDGEBASE" appAction="UPDATE" pButton type="button"
-                    label="Sửa" icon="fa fa-edit" class="p-button-warning p-button-sm me-2" *ngIf="selectedItems.length== 1"
-                    (click)="showEditModal()"></button>
+            <div class="row">
+                <div class="col-md-6">
+                    <button appPermission appFunction="CONTENT_KNOWLEDGEBASE" appAction="CREATE" pButton type="button"
+                        label="Thêm Bài Viết" icon="fa fa-plus" class="p-button-sm me-2" (click)="showAddModal()"></button>
+                    <button appPermission appFunction="CONTENT_KNOWLEDGEBASE" appAction="DELETE" pButton type="button"
+                        label="Xóa" icon="fa fa-trash" class="p-button-danger p-button-sm me-2"
+                        *ngIf="selectedItems.length > 0" (click)="deleteItems()"></button>
+                    <button appPermission appFunction="CONTENT_KNOWLEDGEBASE" appAction="UPDATE" pButton type="button"
+                        label="Sửa" icon="fa fa-edit" class="p-button-warning p-button-sm me-2"
+                        *ngIf="selectedItems.length== 1" (click)="showEditModal()"></button>
+                    <button appPermission appFunction="CONTENT_COMMENT" appAction="VIEW" pButton type="button"
+                        label="Bình luận" icon="fa fa-eye" class="p-button-success p-button-sm me-2"
+                        *ngIf="selectedItems.length == 1" (click)="viewComment()"></button>
+                    <button appPermission appFunction="CONTENT_COMMENT" appAction="VIEW" pButton type="button"
+                        label="Tất Cả Bình luận" icon="fa fa-eye" class="p-button-success p-button-sm me-2"
+                        *ngIf="selectedItems.length == 0" (click)="viewComments()"></button>
+                </div>
+                <div class="col-md-6">
+                    <input style="width: 100%;" pInputText (keyup.enter)="loadData()" [(ngModel)]="keyword"
+                        placeholder="Nhập từ khóa..." type="text">
+                </div>
             </div>
-            <div class="col-md-6">
-                <input style="width: 100%;" pInputText (keyup.enter)="loadData()" [(ngModel)]="keyword"
-                    placeholder="Nhập từ khóa..." type="text">
-            </div>
-           </div>
         </p-header>
 
         <p-table #dt [value]="items" selectionMode="multiple" [(selection)]="selectedItems" [metaKeySelection]="true"
