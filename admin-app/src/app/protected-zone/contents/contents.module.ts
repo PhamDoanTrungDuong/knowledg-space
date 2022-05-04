@@ -27,12 +27,13 @@ import { ValidationMessageModule } from './../../shared/modules/validation-messa
 
 import { CategoriesComponent } from './categories/categories.component';
 import { KnowledgeBasesComponent } from './knowledge-bases/knowledge-bases.component';
-import { ReportsComponent } from './reports/reports.component';
 import { ContentsRoutingModule } from './contents-routing.module';
 import { KnowledgeBasesDetailComponent } from './knowledge-bases/knowledge-bases-detail/knowledge-bases-detail.component';
 import { CategoriesDetailComponent } from './categories/categories-detail/categories-detail.component';
 import { CommentComponent } from './knowledge-bases/comment/comment.component';
 import { CommentDetailComponent } from './knowledge-bases/comment-detail/comment-detail.component';
+import { ReportComponent } from './knowledge-bases/report/report.component';
+import { ReportDetailComponent } from './knowledge-bases/report-detail/report-detail.component';
 
 
 
@@ -40,11 +41,12 @@ import { CommentDetailComponent } from './knowledge-bases/comment-detail/comment
   declarations: [
     CategoriesComponent,
     KnowledgeBasesComponent,
-    ReportsComponent,
     KnowledgeBasesDetailComponent,
     CategoriesDetailComponent,
     CommentComponent,
-    CommentDetailComponent
+    CommentDetailComponent,
+    ReportComponent,
+    ReportDetailComponent
   ],
   imports: [
     CommonModule,
