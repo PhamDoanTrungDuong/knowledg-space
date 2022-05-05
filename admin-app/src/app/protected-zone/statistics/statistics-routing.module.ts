@@ -12,7 +12,7 @@ const routes: Routes = [
         component: MonthlyNewKbsComponent
     },
     {
-        path: 'monthly-new-kbs',
+        path: 'monthly-newkbs',
         component: MonthlyNewKbsComponent,
         data: {
             functionCode: 'STATISTIC_MONTHLY_NEWKB'
@@ -20,7 +20,7 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'monthly-new-members',
+        path: 'monthly-registers',
         component: MonthlyNewMembersComponent,
         data: {
             functionCode: 'STATISTIC_MONTHLY_NEWMEMBER'
@@ -28,7 +28,7 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'monthly-new-comments',
+        path: 'monthly-comments',
         component: MonthlyNewCommentsComponent,
         data: {
             functionCode: 'STATISTIC_MONTHLY_COMMENT'

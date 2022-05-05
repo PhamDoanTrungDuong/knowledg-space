@@ -65,7 +65,7 @@ const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'reports',
+        path: 'knowledge-bases/reports',
         component: ReportComponent,
         data: {
             functionCode: 'CONTENT_REPORT'

@@ -5,7 +5,13 @@ import { MonthlyNewKbsComponent } from './monthly-new-kbs/monthly-new-kbs.compon
 import { MonthlyNewCommentsComponent } from './monthly-new-comments/monthly-new-comments.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
 
-
+import { PanelModule } from 'primeng/panel';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
+import { BlockUIModule } from 'primeng/blockui';
+import { InputTextModule } from 'primeng/inputtext';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +21,14 @@ import { StatisticsRoutingModule } from './statistics-routing.module';
   ],
   imports: [
     CommonModule,
-    StatisticsRoutingModule
+    StatisticsRoutingModule,
+    PanelModule,
+    ButtonModule,
+    TableModule,
+    BlockUIModule,
+    InputTextModule,
+    ProgressSpinnerModule,
+    FormsModule,
   ]
 })
 export class StatisticsModule { }
