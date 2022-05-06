@@ -182,7 +182,7 @@ form.search-form .input-common, form.search-form input.search-term, form.search-
 }
 form.search-form input.search-term {
   font-size: 14px;
-  height: 24px;
+  height: 48px;
   line-height: 24px;
   padding: 12px;
   width: 72%;
@@ -928,9 +928,9 @@ input[type=text].error,
   padding: 0;
   margin-bottom: 20px;
 }
-#footer .widget #twitter_update_list > ul > li span {
+/* #footer .widget #twitter_update_list > ul > li span {
 
-}
+} */
 #footer .widget ul li {
   border-bottom: 1px solid #535b61;
 }
@@ -1221,9 +1221,9 @@ a#scroll-top {
   border-radius: 4px;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  -webkit-transition: all 0.25s ease-in-out;
+  /* -webkit-transition: all 0.25s ease-in-out;
   -moz-transition: all 0.25s ease-in-out;
-  -o-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out; */
 }
 
 a#scroll-top:hover {
