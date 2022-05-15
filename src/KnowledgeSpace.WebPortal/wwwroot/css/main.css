@@ -1401,8 +1401,8 @@ a#scroll-top:hover {
   }
   .search-area-wrapper form.search-form input.search-btn {
     display: block;
-  border-radius: 6px; 
-  margin: 0 auto;
+    border-radius: 6px; 
+    margin: 0 auto;
   }
 
   ul.articles .article-entry {
