@@ -12,6 +12,8 @@ namespace KnowledgeSpace.ViewModels.Contents
 
         public int CategoryId { get; set; }
 
+        public string CategoryAlias { get; set; }
+
         public string CategoryName { get; set; }
 
         public string Title { get; set; }
@@ -21,5 +23,9 @@ namespace KnowledgeSpace.ViewModels.Contents
         public string Description { get; set; }
 
         public int? ViewCount { get; set; }
+
+        public DateTime CreateDate { get; set; }
+
+        public int? NumberOfVotes { get; set; } = 0;
     }
 }
