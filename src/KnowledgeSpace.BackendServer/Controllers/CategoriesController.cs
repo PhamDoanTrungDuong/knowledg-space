@@ -5,6 +5,7 @@ using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Contents;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,7 +52,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         }
 
         [HttpGet]
-        [ClaimRequirement(FunctionCode.CONTENT_CATEGORY, CommandCode.VIEW)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategories()
         {
             var categorys = await _context.Categories.ToListAsync();
@@ -86,7 +87,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
         }
 
         [HttpGet("{id}")]
-        [ClaimRequirement(FunctionCode.CONTENT_CATEGORY, CommandCode.VIEW)]
+        [AllowAnonymous]
         public async Task<IActionResult> GetById(int id)
         {
             var category = await _context.Categories.FindAsync(id);

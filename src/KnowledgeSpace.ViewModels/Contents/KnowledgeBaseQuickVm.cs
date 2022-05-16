@@ -27,5 +27,7 @@ namespace KnowledgeSpace.ViewModels.Contents
         public DateTime CreateDate { get; set; }
 
         public int? NumberOfVotes { get; set; } = 0;
+
+        public int? NumberOfComments { get; set; } = 0;
     }
 }
