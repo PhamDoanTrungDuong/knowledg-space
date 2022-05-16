@@ -26,6 +26,15 @@ namespace KnowledgeSpace.WebPortal.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<KnowledgeBaseVm> GetKnowledgeBaseDetail(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BackendApiUrl"]);
+            var response = await client.GetAsync($"/api/knowledgeBases/{id}");
+            var knowledgeBase = JsonConvert.DeserializeObject<KnowledgeBaseVm>(await response.Content.ReadAsStringAsync());
+            return knowledgeBase = JsonConvert.DeserializeObject<KnowledgeBaseVm>(await response.Content.ReadAsStringAsync());
+        }
+
         public async Task<Pagination<KnowledgeBaseQuickVm>> GetKnowledgeBasesByCategoryId(int categoryId, int pageIndex, int pageSize)
         {
             var apiUrl = $"/api/knowledgeBases/filter?categoryId={categoryId}&pageIndex={pageIndex}&pageSize={pageSize}";
@@ -34,6 +43,15 @@ namespace KnowledgeSpace.WebPortal.Services
             var response = await client.GetAsync(apiUrl);
             var knowledgeBases = JsonConvert.DeserializeObject<Pagination<KnowledgeBaseQuickVm>>(await response.Content.ReadAsStringAsync());
             return knowledgeBases;
+        }
+
+        public async Task<List<LabelVm>> GetLabelsByKnowledgeBaseId(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.BaseAddress = new Uri(_configuration["BackendApiUrl"]);
+            var response = await client.GetAsync($"/api/knowledgeBases/{id}/labels");
+            var labels = JsonConvert.DeserializeObject<List<LabelVm>>(await response.Content.ReadAsStringAsync());
+            return labels;
         }
 
         public async Task<List<KnowledgeBaseQuickVm>> GetLatestKnowledgeBases(int take)

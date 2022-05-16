@@ -98,6 +98,11 @@ namespace KnowledgeSpace.WebPortal
                app.UseEndpoints(endpoints =>
                {
                    endpoints.MapControllerRoute(
+                     name: "KnowledgeBaseDetails",
+                     pattern: "/kb/{seoAlias}-{id}",
+                     new { controller = "KnowledgeBases", action = "Details" });
+
+                   endpoints.MapControllerRoute(
                       name: "ListByCategoryId",
                       pattern: "/cat/{categoryAlias}-{id}",
                       new { controller = "KnowledgeBases", action = "ListByCategoryId" });
