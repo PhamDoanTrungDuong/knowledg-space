@@ -5,6 +5,7 @@ using KnowledgeSpace.BackendServer.Extensions;
 using KnowledgeSpace.BackendServer.Helpers;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Contents;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -72,7 +73,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 CreateDate = comment.CreateDate,
                 KnowledgeBaseId = comment.KnowledgeBaseId,
                 LastModifiedDate = comment.LastModifiedDate,
-                OwnwerUserId = comment.OwnerUserId
+                OwnerUserId = comment.OwnerUserId
             };
 
             return Ok(commentVm);
@@ -159,11 +160,37 @@ namespace KnowledgeSpace.BackendServer.Controllers
                     CreateDate = comment.CreateDate,
                     KnowledgeBaseId = comment.KnowledgeBaseId,
                     LastModifiedDate = comment.LastModifiedDate,
-                    OwnwerUserId = comment.OwnerUserId
+                    OwnerUserId = comment.OwnerUserId
                 };
                 return Ok(commentVm);
             }
             return BadRequest(new ApiBadRequestResponse($"Delete comment failed"));
+        }
+
+        [HttpGet("comments/recent/{take}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetRecentComments(int take)
+        {
+            var query = from c in _context.Comments
+                        join u in _context.Users
+                            on c.OwnerUserId equals u.Id
+                        join k in _context.KnowledgeBases
+                        on c.KnowledgeBaseId equals k.Id
+                        orderby c.CreateDate descending
+                        select new { c, u, k };
+
+            var comments = await query.Take(take).Select(x => new CommentVm()
+            {
+                Id = x.c.Id,
+                CreateDate = x.c.CreateDate,
+                KnowledgeBaseId = x.c.KnowledgeBaseId,
+                OwnerUserId = x.c.OwnerUserId,
+                KnowledgeBaseTitle = x.k.Title,
+                OwnerName = x.u.FirstName + " " + x.u.LastName,
+                KnowledgeBaseSeoAlias = x.k.SeoAlias
+            }).ToListAsync();
+
+            return Ok(comments);
         }
 
         #endregion Comments
