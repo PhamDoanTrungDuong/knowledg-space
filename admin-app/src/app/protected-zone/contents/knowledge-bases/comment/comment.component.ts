@@ -1,3 +1,4 @@
+import { KnowledgeBase } from './../../../../shared/models/knowledge-base.model';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -76,11 +77,12 @@ export class CommentComponent implements OnInit {
       return;
     }
     const initialState = {
-      entityId: this.selectedItems[0].id
+      commentId: this.selectedItems[0].id,
+      knowledgeBaseId: this.entityId
     };
     this.bsModalRef = this.modalService.show(CommentDetailComponent,
       {
-        // initialState: initialState,
+        initialState: initialState,
         class: 'modal-lg',
         backdrop: 'static'
       });

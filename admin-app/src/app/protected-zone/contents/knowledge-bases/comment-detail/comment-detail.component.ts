@@ -29,10 +29,10 @@ export class CommentDetailComponent implements OnInit, OnDestroy {
       this.loadFormDetails(this.knowledgeBaseId, this.commentId);
     }
   }
-  private loadFormDetails(commentId, knowledgeBaseId) {
+  private loadFormDetails(knowledgeBaseId, commentId) {
     this.blockedPanel = true;
     this.subscription.add(this.commentsService.getDetail(knowledgeBaseId, commentId)
-      .subscribe((response: Comment) => {
+      .subscribe((response: Comment) => {   
         this.comment = response;
         setTimeout(() => { this.blockedPanel = false; this.btnDisabled = false; }, 1000);
       }, error => {

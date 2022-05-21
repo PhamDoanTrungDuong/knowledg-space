@@ -65,7 +65,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var comment = await _context.Comments.FindAsync(commentId);
             if (comment == null)
                 return NotFound(new ApiNotFoundResponse($"Cannot found comment with id: {commentId}"));
-
+            var user = await _context.Users.FindAsync(comment.OwnerUserId);
             var commentVm = new CommentVm()
             {
                 Id = comment.Id,
@@ -73,7 +73,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
                 CreateDate = comment.CreateDate,
                 KnowledgeBaseId = comment.KnowledgeBaseId,
                 LastModifiedDate = comment.LastModifiedDate,
-                OwnerUserId = comment.OwnerUserId
+                OwnerUserId = comment.OwnerUserId,
+                OwnerName = user.FirstName + " " + user.LastName
             };
 
             return Ok(commentVm);
@@ -144,10 +145,10 @@ namespace KnowledgeSpace.BackendServer.Controllers
             _context.Comments.Remove(comment);
 
             var knowledgeBase = await _context.KnowledgeBases.FindAsync(knowledgeBaseId);
-            if (knowledgeBase != null)
+            if (knowledgeBase == null)
                 return BadRequest(new ApiBadRequestResponse($"Cannot found knowledge base with id: {knowledgeBaseId}"));
 
-            knowledgeBase.NumberOfComments = knowledgeBase.NumberOfVotes.GetValueOrDefault(0) - 1;
+            knowledgeBase.NumberOfComments = knowledgeBase.NumberOfComments.GetValueOrDefault(0) - 1;
             _context.KnowledgeBases.Update(knowledgeBase);
 
             var result = await _context.SaveChangesAsync();
