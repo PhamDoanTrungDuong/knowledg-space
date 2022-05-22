@@ -1,6 +1,13 @@
 ﻿@model SideBarViewModel
 <aside class="span4 page-sidebar">
-
+ @if (User.Identity.IsAuthenticated)
+    {
+        <section class="widget">
+            <div class="body-section">
+                <a class="btn btn-success new-kb" href="/new-kb">Đăng Bài Mới</a>
+            </div>
+        </section>
+    }
     <section class="widget">
         <div class="support-widget">
             <h3 class="title">Hỗ trợ</h3>
@@ -14,14 +21,14 @@
             @foreach (var item in Model.PopularKnowledgeBases)
             {
                 var url = "/kb/" + item.SeoAlias + "-" + item.Id + "/";
-                <li class="article-entry standard">
-                    <h4><a href="@url">@item.Title</a></h4>
-                    <span class="article-meta">
+                    <li class="article-entry standard">
+                        <h4><a href="@url">@item.Title</a></h4>
+                        <span class="article-meta">
                         @item.CreateDate.ToString("dd/MM/yyyy") trong
-                        <a href="/kb/@item.SeoAlias-@item.Id" title="Xem bài viết trong danh mục @item.CategoryName">@item.CategoryName</a>
-                    </span>
-                    <span class="like-count">@item.NumberOfVotes.GetValueOrDefault(0).ToString("N0")</span>
-                </li>
+                            <a href="/kb/@item.SeoAlias-@item.Id" title="Xem bài viết trong danh mục @item.CategoryName">@item.CategoryName</a>
+                        </span>
+                        <span class="like-count">@item.NumberOfVotes.GetValueOrDefault(0).ToString("N0")</span>
+                    </li>
             }
         </ul>
     </section>
@@ -31,7 +38,7 @@
         <ul>
             @foreach (var item in Model.Categories)
             {
-                <li><a href="/cat/@item.SeoAlias-@item.Id">@item.Name</a></li>
+                    <li><a href="/cat/@item.SeoAlias-@item.Id">@item.Name</a></li>
             }
         </ul>
     </section>
@@ -41,10 +48,10 @@
         <ul id="recentcomments">
             @foreach (var item in Model.RecentComments)
             {
-                <li class="recentcomments">
-                    <a href="#" rel="external nofollow" class="url">@item.OwnerName</a> trong
-                    <a href="/kb/@item.KnowledgeBaseSeoAlias-@item.KnowledgeBaseId">@item.KnowledgeBaseTitle</a>
-                </li>
+                    <li class="recentcomments">
+                        <a href="#" rel="external nofollow" class="url">@item.OwnerName</a> trong
+                        <a href="/kb/@item.KnowledgeBaseSeoAlias-@item.KnowledgeBaseId">@item.KnowledgeBaseTitle</a>
+                    </li>
 
             }
         </ul>

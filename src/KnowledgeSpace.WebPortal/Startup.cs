@@ -1,3 +1,5 @@
+using FluentValidation.AspNetCore;
+using KnowledgeSpace.ViewModels.Contents;
 using KnowledgeSpace.WebPortal.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,24 +61,25 @@ namespace KnowledgeSpace.WebPortal
                         };
                    });
 
-               var builder = services.AddControllersWithViews();
+               var builder = services.AddControllersWithViews().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<KnowledgeBaseCreateRequestValidator>());
+               
                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                if (environment == Environments.Development)
                {
                     builder.AddRazorRuntimeCompilation();
                }
-            //Declare DI Containers
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+               //Declare DI Containers
+               services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddTransient<ICategoryApiClient, CategoryApiClient>();
-            services.AddTransient<IKnowledgeBaseApiClient, KnowledgeBaseApiClient>();
-            services.AddTransient<ILabelApiClient, LabelApiClient>();
-            services.AddTransient<IUserApiClient, UserApiClient>();
+               services.AddTransient<ICategoryApiClient, CategoryApiClient>();
+               services.AddTransient<IKnowledgeBaseApiClient, KnowledgeBaseApiClient>();
+               services.AddTransient<ILabelApiClient, LabelApiClient>();
+               services.AddTransient<IUserApiClient, UserApiClient>();
 
-        }
+          }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+          // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+          public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
           {
                if (env.IsDevelopment())
                {
@@ -89,7 +92,7 @@ namespace KnowledgeSpace.WebPortal
                     app.UseHsts();
                }
                app.UseHttpsRedirection();
-               
+
                app.UseStaticFiles();
 
                app.UseRouting();
@@ -100,29 +103,39 @@ namespace KnowledgeSpace.WebPortal
 
                app.UseEndpoints(endpoints =>
                {
-                   endpoints.MapControllerRoute(
-                   name: "List By Tag Id",
-                   pattern: "/tag/{tagId}", 
-                   new { controller = "KnowledgeBases", action = "ListByTag" });
+                    endpoints.MapControllerRoute(
+                         name: "My KBs",
+                         pattern: "/my-kbs",
+                         new { controller = "Account", action = "MyKnowledgeBases" });
 
-                   endpoints.MapControllerRoute(
-                     name: "Search KB",
-                     pattern: "/search",
-                     new { controller = "KnowledgeBases", action = "Search" });
+                    endpoints.MapControllerRoute(
+                         name: "New KB",
+                         pattern: "/new-kb",
+                         new { controller = "Account", action = "CreateNewKnowledgeBase" });
 
-                   endpoints.MapControllerRoute(
-                     name: "KnowledgeBaseDetails",
-                     pattern: "/kb/{seoAlias}-{id}",
-                     new { controller = "KnowledgeBases", action = "Details" });
+                    endpoints.MapControllerRoute(
+                         name: "List By Tag Id",
+                         pattern: "/tag/{tagId}",
+                         new { controller = "KnowledgeBases", action = "ListByTag" });
 
-                   endpoints.MapControllerRoute(
-                      name: "ListByCategoryId",
-                      pattern: "/cat/{categoryAlias}-{id}",
-                      new { controller = "KnowledgeBases", action = "ListByCategoryId" });
+                    endpoints.MapControllerRoute(
+                         name: "Search KB",
+                         pattern: "/search",
+                         new { controller = "KnowledgeBases", action = "Search" });
 
-                   endpoints.MapControllerRoute(
-                     name: "default",
-                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                    endpoints.MapControllerRoute(
+                         name: "KnowledgeBaseDetails",
+                         pattern: "/kb/{seoAlias}-{id}",
+                         new { controller = "KnowledgeBases", action = "Details" });
+
+                    endpoints.MapControllerRoute(
+                         name: "ListByCategoryId",
+                         pattern: "/cat/{categoryAlias}-{id}",
+                         new { controller = "KnowledgeBases", action = "ListByCategoryId" });
+
+                    endpoints.MapControllerRoute(
+                         name: "default",
+                         pattern: "{controller=Home}/{action=Index}/{id?}");
                });
           }
      }

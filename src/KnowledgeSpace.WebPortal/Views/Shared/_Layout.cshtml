@@ -1,5 +1,6 @@
 ﻿<html lang="en-US">
 <!--<![endif]-->
+
 <head>
     <!-- META TAGS -->
     <meta charset="UTF-8" />
@@ -10,15 +11,19 @@
     <link rel="shortcut icon" href="/images/favicon.png" />
 
     <!-- Google Web Fonts-->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link
+        href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+        rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet'
+        type='text/css'>
 
     <!-- Style Sheet-->
     <link rel="stylesheet" href="/css/style.css" />
     <link rel='stylesheet' id='bootstrap-css-css' href='/css/bootstrap.css' type='text/css' media='all' />
     <link rel='stylesheet' id='responsive-css-css' href='/css/responsive.css' type='text/css' media='all' />
-    <link rel='stylesheet' id='pretty-photo-css-css' href='/js/prettyphoto/prettyPhoto.css?ver=3.1.4' type='text/css' media='all' />
+    <link rel='stylesheet' id='pretty-photo-css-css' href='/js/prettyphoto/prettyPhoto.css?ver=3.1.4' type='text/css'
+        media='all' />
     <link rel='stylesheet' id='main-css-css' href='/css/main.css' type='text/css' media='all' />
     <link rel='stylesheet' id='blue-skin-css' href='/css/red-skin.css' type='text/css' media='all' />
 
@@ -59,7 +64,7 @@
     </div>
     <!-- End of Page Container -->
     <!-- Start of Footer -->
-        @await Component.InvokeAsync("Footer")
+    @await Component.InvokeAsync("Footer")
     <!-- End of Footer -->
 
     <a href="#top" id="scroll-top"></a>
@@ -74,6 +79,8 @@
     <script type='text/javascript' src='/js/jquery.validate.min.js'></script>
     <script type='text/javascript' src="/js/jquery-twitterFetcher.js"></script>
     <script type='text/javascript' src='/js/custom.js'></script>
+    <partial name="_ValidationScriptsPartial" />
     @await RenderSectionAsync("scripts", required: false)
 </body>
+
 </html>

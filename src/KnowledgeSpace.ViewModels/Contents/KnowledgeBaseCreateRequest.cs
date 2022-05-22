@@ -1,36 +1,48 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace KnowledgeSpace.ViewModels.Contents
 {
-    public class KnowledgeBaseCreateRequest
-    {
-        public int CategoryId { get; set; }
+     public class KnowledgeBaseCreateRequest
+     {
+          [Display(Name = "Danh mục")]
+          public int CategoryId { get; set; }
 
-        public string Title { get; set; }
+          [Display(Name = "Tiêu đề")]
+          public string Title { get; set; }
 
-        public string SeoAlias { get; set; }
+          public string SeoAlias { get; set; }
 
-        public string Description { get; set; }
+          [Display(Name = "Mô tả")]
+          public string Description { get; set; }
 
-        public string Environment { get; set; }
+          [Display(Name = "Môi trường")]
+          public string Environment { get; set; }
 
-        public string Problem { get; set; }
+          [Display(Name = "Vấn đề gặp phải")]
+          public string Problem { get; set; }
 
-        public string StepToReproduce { get; set; }
+          [Display(Name = "Các bước tái hiện")]
+          public string StepToReproduce { get; set; }
 
-        public string ErrorMessage { get; set; }
+          [Display(Name = "Lỗi")]
+          public string ErrorMessage { get; set; }
 
-        public string Workaround { get; set; }
+          [Display(Name = "Cách xử lý nhanh")]
+          public string Workaround { get; set; }
 
-        public string Note { get; set; }
+          [Display(Name = "Giải pháp")]
+          public string Note { get; set; }
 
-        public string[] Labels { get; set; }
+          [Display(Name = "Nhãn")]
+          public string[] Labels { get; set; }
 
-        public List<IFormFile> Attachments { get; set; }
-    }
+          [Display(Name = "Tệp đính kèm")]
+          public List<IFormFile> Attachments { get; set; }
+     }
 }
