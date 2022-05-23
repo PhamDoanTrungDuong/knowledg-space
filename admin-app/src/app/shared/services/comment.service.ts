@@ -26,7 +26,7 @@ export class CommentsService extends BaseService {
             }), catchError(this.handleError));
     }
 
-    delete(knowledgeBaseId, commentId) {
+    delete(commentId, knowledgeBaseId) {
         return this.http.delete(environment.apiUrl + '/api/knowledgeBases/' + knowledgeBaseId + '/comments/' + commentId,
             { headers: this._sharedHeaders })
             .pipe(

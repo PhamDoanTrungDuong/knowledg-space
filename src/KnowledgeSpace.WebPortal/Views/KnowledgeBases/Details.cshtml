@@ -5,20 +5,25 @@
     Layout = "_SubLayout";
 }
 @section scripts{
-    <script src="~/lib/mustache.js/mustache.min.js"></script>
-    <script src="~/js/controllers/knowledgeBaseController.js" asp-append-version="true"></script>
-    <script>
-        var controller = new knowledgeBaseController();
-        controller.initialize();
-    </script>
+<script src="~/lib/mustache.js/mustache.min.js"></script>
+<script src="~/js/controllers/knowledgeBaseController.js" asp-append-version="true"></script>
+<script>
+    var controller = new knowledgeBaseController();
+    controller.initialize();
+</script>
 }
 <input type="hidden" id="hid_knowledge_base_id" value="@Model.Detail.Id" />
-<input type="hidden" id="hid_current_login_name" value="@Model.CurrentUser.FirstName @Model.CurrentUser.LastName" />
+@if (User.Identity.IsAuthenticated)
+{
+    <input type="hidden" id="hid_current_login_name" value="@Model.CurrentUser.FirstName @Model.CurrentUser.LastName" />
+}
 <div class="span8 page-content">
 
     <ul class="breadcrumb">
         <li><a href="/">Trang chủ</a><span class="divider">/</span></li>
-        <li><a href="/cat/@Model.Category.SeoAlias-@Model.Category.Id" title="Xem tất cả bài trong @Model.Category.Name">@Model.Category.Name</a> <span class="divider">/</span></li>
+        <li><a href="/cat/@Model.Category.SeoAlias-@Model.Category.Id"
+                title="Xem tất cả bài trong @Model.Category.Name">@Model.Category.Name</a> <span
+                class="divider">/</span></li>
         <li class="active">@Model.Detail.Title</li>
     </ul>
 
@@ -27,9 +32,12 @@
         <h1 class="post-title"><a href="#">@Model.Detail.Title</a></h1>
 
         <div class="post-meta clearfix">
-            <span class="date">@Model.Detail.CreateDate.ToString("dd/MM/yyyy")</span>
-            <span class="category"><a href="/cat/@Model.Category.SeoAlias-@Model.Category.Id" title="Xem tất cả bài trong @Model.Category.Name">@Model.Category.Name</a></span>
-            <span class="comments"><a href="#" title="Bình luận trong bài @Model.Detail.Title">@Model.Detail.NumberOfComments.GetValueOrDefault(0).ToString("N0") bình luận</a></span>
+            <span class="date">@Model.Detail.CreateDate.ToString("dd/MM/yyyy hh:mm")</span>
+            <span class="category"><a href="/cat/@Model.Category.SeoAlias-@Model.Category.Id"
+                    title="Xem tất cả bài trong @Model.Category.Name">@Model.Category.Name</a></span>
+            <span class="comments"><a href="#"
+                    title="Bình luận trong bài @Model.Detail.Title">@Model.Detail.NumberOfComments.GetValueOrDefault(0).ToString("N0")
+                    bình luận</a></span>
             <span class="like-count">@Model.Detail.NumberOfVotes.GetValueOrDefault(0).ToString("N0")</span>
         </div><!-- end of post meta -->
 
@@ -73,18 +81,22 @@
                 <h3>Đăng bình luận</h3>
 
                 <div class="cancel-comment-reply">
-                    <a rel="nofollow" id="cancel-comment-reply-link" href="#" style="display:none;">Click here to cancel reply.</a>
+                    <a rel="nofollow" id="cancel-comment-reply-link" href="#" style="display:none;">Click here to cancel
+                        reply.</a>
                 </div>
 
                 <form action="/knowledgeBases/addNewComment" method="post" id="commentform">
                     <input type="hidden" name="knowledgeBaseId" value="@Model.Detail.Id" />
-                    <p class="comment-notes">Your email address will not be published. Required fields are marked <span class="required">*</span></p>
+                    <p class="comment-notes">Your email address will not be published. Required fields are marked <span
+                        class="required">*</span></p>
                     <div>
                         <label for="comment">Bình luận</label>
                         <textarea class="span8" name="content" id="txt_new_comment_content" cols="58" rows="10"></textarea>
                     </div>
 
-                    <p class="allowed-tags">You can use these HTML tags and attributes <small><code>&lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt; &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=""&gt; &lt;strike&gt; &lt;strong&gt; </code></small></p>
+                    <p class="allowed-tags">You can use these HTML tags and attributes
+                        <small><code>&lt;a href="" title=""&gt; &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt; &lt;blockquote cite=""&gt; &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=""&gt; &lt;strike&gt; &lt;strong&gt; </code></small>
+                    </p>
 
                     <div>
                         <input class="btn" name="submit" type="submit" id="btn_send_comment" value="Gửi bình luận">
@@ -117,7 +129,7 @@
 
                 <p class="date">
                     <a href="#">
-                        <time datetime="2013-02-26T13:20:14+00:00">{{createDate}}</time>
+                        <time>{{createDate}}</time>
                     </a>
                 </p>
             </div><!-- end .comment-meta -->
@@ -147,7 +159,7 @@
 
                 <p class="date">
                     <a href="#">
-                        <time datetime="2013-02-26T13:18:47+00:00">{{createDate}} vào lúc 1:18 pm</time>
+                        <time>{{createDate}}</time>
                     </a>
                 </p>
             </div><!-- end .comment-meta -->

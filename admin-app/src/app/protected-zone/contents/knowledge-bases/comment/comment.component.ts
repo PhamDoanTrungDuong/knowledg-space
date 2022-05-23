@@ -1,5 +1,5 @@
 import { KnowledgeBase } from './../../../../shared/models/knowledge-base.model';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
@@ -10,11 +10,11 @@ import { CommentsService, NotificationService } from './../../../../shared/servi
 import { Comment } from './../../../../shared/models/comment.model';
 
 @Component({
-  selector: 'comment',
+  selector: 'app-comment',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss']
 })
-export class CommentComponent implements OnInit {
+export class CommentComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   // Default
   public bsModalRef: BsModalRef;
@@ -89,13 +89,14 @@ export class CommentComponent implements OnInit {
   }
 
   deleteItems() {
-    const id = this.selectedItems[0].id;
+    const commentId = this.selectedItems[0].id;
+    const knowledgeBaseId = this.selectedItems[0].knowledgeBaseId;
     this.notificationService.showConfirmation(MessageConstants.CONFIRM_DELETE_MSG,
-      () => this.deleteItemsConfirm(id));
+      () => this.deleteItemsConfirm(commentId, knowledgeBaseId));
   }
-  deleteItemsConfirm(id) {
+  deleteItemsConfirm(commentId, knowledgeBaseId) {
     this.blockedPanel = true;
-    this.subscription.add(this.commentsService.delete(this.entityId, id).subscribe(() => {
+    this.subscription.add(this.commentsService.delete(knowledgeBaseId, commentId).subscribe(() => {
       this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
       this.loadData();
       this.selectedItems = [];

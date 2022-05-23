@@ -1,6 +1,9 @@
 using FluentValidation.AspNetCore;
+using IdentityModel.Client;
 using KnowledgeSpace.ViewModels.Contents;
 using KnowledgeSpace.WebPortal.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +16,10 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace KnowledgeSpace.WebPortal
@@ -31,38 +37,117 @@ namespace KnowledgeSpace.WebPortal
           public void ConfigureServices(IServiceCollection services)
           {
                services.AddHttpClient();
-               services.AddAuthentication(options =>
+                services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+               .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
                {
-                    options.DefaultScheme = "Cookies";
-                    options.DefaultChallengeScheme = "oidc";
-               })
-                   .AddCookie("Cookies")
-                   .AddOpenIdConnect("oidc", options =>
+                   options.Events = new CookieAuthenticationEvents
                    {
-                        options.Authority = Configuration["Authorization:AuthorityUrl"];
-                        options.RequireHttpsMetadata = false;
-                        options.GetClaimsFromUserInfoEndpoint = true;
+                       // this event is fired everytime the cookie has been validated by the cookie middleware,
+                       // so basically during every authenticated request
+                       // the decryption of the cookie has already happened so we have access to the user claims
+                       // and cookie properties - expiration, etc..
+                       OnValidatePrincipal = async x =>
+                       {
+                           // since our cookie lifetime is based on the access token one,
+                           // check if we're more than halfway of the cookie lifetime
+                           var now = DateTimeOffset.UtcNow;
+                           var timeElapsed = now.Subtract(x.Properties.IssuedUtc.Value);
+                           var timeRemaining = x.Properties.ExpiresUtc.Value.Subtract(now);
 
-                        options.ClientId = Configuration["Authorization:ClientId"];
-                        options.ClientSecret = Configuration["Authorization:ClientSecret"];
-                        options.ResponseType = "code";
+                           if (timeElapsed > timeRemaining)
+                           {
+                               var identity = (ClaimsIdentity)x.Principal.Identity;
+                               var accessTokenClaim = identity.FindFirst("access_token");
+                               var refreshTokenClaim = identity.FindFirst("refresh_token");
 
-                        options.SaveTokens = true;
+                               // if we have to refresh, grab the refresh token from the claims, and request
+                               // new access token and refresh token
+                               var refreshToken = refreshTokenClaim.Value;
+                               var response = await new HttpClient().RequestRefreshTokenAsync(new RefreshTokenRequest
+                               {
+                                   Address = Configuration["Authorization:AuthorityUrl"],
+                                   ClientId = Configuration["Authorization:ClientId"],
+                                   ClientSecret = Configuration["Authorization:ClientSecret"],
+                                   RefreshToken = refreshToken
+                               });
 
-                        options.Scope.Add("openid");
-                        options.Scope.Add("profile");
-                        options.Scope.Add("offline_access");
-                        options.Scope.Add("api.knowledgespace");
+                               if (!response.IsError)
+                               {
+                                   // everything went right, remove old tokens and add new ones
+                                   identity.RemoveClaim(accessTokenClaim);
+                                   identity.RemoveClaim(refreshTokenClaim);
 
-                        options.TokenValidationParameters = new TokenValidationParameters
+                                   identity.AddClaims(new[]
+                                   {
+                                        new Claim("access_token", response.AccessToken),
+                                        new Claim("refresh_token", response.RefreshToken)
+                                    });
+
+                                   // indicate to the cookie middleware to renew the session cookie
+                                   // the new lifetime will be the same as the old one, so the alignment
+                                   // between cookie and access token is preserved
+                                   x.ShouldRenew = true;
+                               }
+                           }
+                       }
+                   };
+               })
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = Configuration["Authorization:AuthorityUrl"];
+                    options.RequireHttpsMetadata = false;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+
+                    options.ClientId = Configuration["Authorization:ClientId"];
+                    options.ClientSecret = Configuration["Authorization:ClientSecret"];
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+
+                    options.Scope.Add("openid");
+                    options.Scope.Add("profile");
+                    options.Scope.Add("offline_access");
+                    options.Scope.Add("api.knowledgespace");
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
+                    options.Events = new OpenIdConnectEvents
+                    {
+                        // that event is called after the OIDC middleware received the auhorisation code,
+                        // redeemed it for an access token and a refresh token,
+                        // and validated the identity token
+                        OnTokenValidated = x =>
                         {
-                             NameClaimType = "name",
-                             RoleClaimType = "role"
-                        };
-                   });
+                            // store both access and refresh token in the claims - hence in the cookie
+                            var identity = (ClaimsIdentity)x.Principal.Identity;
+                            identity.AddClaims(new[]
+                            {
+                                new Claim("access_token", x.TokenEndpointResponse.AccessToken),
+                                new Claim("refresh_token", x.TokenEndpointResponse.RefreshToken)
+                            });
+
+                            // so that we don't issue a session cookie but one with a fixed expiration
+                            x.Properties.IsPersistent = true;
+
+                            // align expiration of the cookie with expiration of the
+                            // access token
+                            var accessToken = new JwtSecurityToken(x.TokenEndpointResponse.AccessToken);
+                            x.Properties.ExpiresUtc = accessToken.ValidTo;
+
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
 
                var builder = services.AddControllersWithViews().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<KnowledgeBaseCreateRequestValidator>());
-               
+
                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                if (environment == Environments.Development)
                {
@@ -107,6 +192,11 @@ namespace KnowledgeSpace.WebPortal
                          name: "My KBs",
                          pattern: "/my-kbs",
                          new { controller = "Account", action = "MyKnowledgeBases" });
+
+                    endpoints.MapControllerRoute(
+                         name: "Edit KB",
+                         pattern: "/edit-kb/{id}",
+                         new { controller = "Account", action = "EditKnowledgeBase" });
 
                     endpoints.MapControllerRoute(
                          name: "New KB",
