@@ -4,7 +4,7 @@
          <span aria-hidden="true">&times;</span>
      </button>
  </div>
- <form class="form-horizontal form-label-left" novalidate>
+ <form class="form-horizontal form-label-left" novalidate *ngIf="report">
      <div class="modal-body div-scroll">
          <p-panel #pnl header="Thông tin" [toggleable]="true" [collapsed]="false" styleClass="m-b-10">
              <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">

@@ -12,9 +12,9 @@ export class ReportsService extends BaseService {
         super();
         this._sharedHeaders = this._sharedHeaders.set('Content-Type', 'application/json');
     }
-    getDetail(knowledgeBaseId, commentId) {
+    getDetail(knowledgeBaseId, reportId) {
         return this.http
-            .get<Report>(`${environment.apiUrl}/api/knowledgeBases/${knowledgeBaseId}/reports/${commentId}`, {
+            .get<Report>(`${environment.apiUrl}/api/knowledgeBases/${knowledgeBaseId}/reports/${reportId}`, {
                 headers: this._sharedHeaders
             })
             .pipe(catchError(this.handleError));
@@ -34,11 +34,11 @@ export class ReportsService extends BaseService {
             );
     }
 
-    delete(knowledgeBaseId, commentId) {
-        return this.http
-            .delete(environment.apiUrl + '/api/knowledgeBases/' + knowledgeBaseId + '/reports/' + commentId, {
-                headers: this._sharedHeaders
-            })
-            .pipe(catchError(this.handleError));
+    delete(knowledgeBaseId, reportId) {
+        return this.http.delete(environment.apiUrl + '/api/knowledgeBases/' + knowledgeBaseId + '/reports/' + reportId,
+            { headers: this._sharedHeaders })
+            .pipe(
+                catchError(this.handleError)
+            );
     }
 }

@@ -75,13 +75,24 @@
         $('#frm_vote').submit(function (e) {
             e.preventDefault();
             var form = $(this);
-            $.post('/knowledgeBases/vote', form.serialize()).done(function (response) {
+            $.post('/knowledgeBases/postVote', form.serialize()).done(function (response) {
                 $('.like-it').text(response);
                 $('.like-count').text(response);
             });
         });
+
         $('#frm_vote .like-it').click(function () {
             $('#frm_vote').submit();
+        });
+
+        $('#btn_send_report').off('click').on('click', function (e) {
+            e.preventDefault();
+            var form = $('#frm_report');
+            $.post('/knowledgeBases/postReport', form.serialize())
+                .done(function () {
+                    $('#reportModal').modal('hide');
+                    $('#txt_report_content').val('');
+                });
         });
     }
 
