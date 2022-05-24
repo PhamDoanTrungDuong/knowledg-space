@@ -211,23 +211,6 @@ jQuery(document).ready(function(e) {
 		}
 
 
-
-    /* ---------------------------------------------------- */
-    /*	Like Button JS
-     /* ---------------------------------------------------- */
-    $('#like-it-form .like-it').click(function(){
-        var likeButton = $(this);
-        var likeHtml = likeButton.html();
-        var likeNum = parseInt(likeHtml, 10);
-        likeNum++;
-        likeButton.html(likeNum);
-
-         //   $('#like-it-form').ajaxSubmit(options);
-    });
-
-
-
-
     /*-----------------------------------------------------------------------------------*/
     /*	FAQs
     /*-----------------------------------------------------------------------------------*/

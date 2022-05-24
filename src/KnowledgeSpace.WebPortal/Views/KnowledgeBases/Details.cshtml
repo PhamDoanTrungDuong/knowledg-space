@@ -53,11 +53,13 @@
     </article>
 
     <div class="like-btn">
-        <form id="like-it-form" action="#" method="post">
-            <span class="like-it ">@Model.Detail.NumberOfVotes.GetValueOrDefault(0).ToString("N0")</span>
-            <input type="hidden" name="post_id" value="@Model.Detail.Id">
-            <input type="hidden" name="action" value="like_it">
-        </form>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form id="frm_vote" action="#" method="post">
+                <input type="hidden" name="knowledgeBaseId" value="@Model.Detail.Id">
+                <span class="like-it">@Model.Detail.NumberOfVotes.GetValueOrDefault(0).ToString("N0")</span>
+            </form>
+        }
 
         <span class="tags">
             <strong>Tags:&nbsp;&nbsp;</strong>
