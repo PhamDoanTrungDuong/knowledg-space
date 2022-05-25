@@ -41,7 +41,7 @@ namespace KnowledgeSpace.BackendServer
           public void ConfigureServices(IServiceCollection services)
           {
                //1. Setup entity framework
-               services.AddDbContext<ApplicationDbContext>(options =>
+               services.AddDbContextPool<ApplicationDbContext>(options =>
                    options.UseSqlServer(
                        Configuration.GetConnectionString("DefaultConnection")));
                //2. Setup idetntity
@@ -129,8 +129,9 @@ namespace KnowledgeSpace.BackendServer
                services.AddTransient<IStorageService, FileStorageService>();
                services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
                services.AddTransient<IViewRenderService, ViewRenderService>();
+               services.AddTransient<ICacheService, DistributedCacheService>();
 
-               services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(c =>
                {
                     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Knowledge Space API", Version = "v1" });
 
@@ -156,6 +157,13 @@ namespace KnowledgeSpace.BackendServer
                         new List<string>{ "api.knowledgespace" }
                     }
                    });
+               });
+
+               services.AddDistributedSqlServerCache(o =>
+               {
+                    o.ConnectionString = Configuration.GetConnectionString("DefaultConnection");
+                    o.SchemaName = "dbo";
+                    o.TableName = "CacheTable";
                });
           }
 

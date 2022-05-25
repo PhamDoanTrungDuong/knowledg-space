@@ -30,13 +30,15 @@ namespace KnowledgeSpace.BackendServer.Controllers
           private readonly ILogger<KnowledgeBasesController> _logger;
           private readonly IEmailSender _emailSender;
           private readonly IViewRenderService _viewRenderService;
+          private readonly ICacheService _cacheService;
 
-          public KnowledgeBasesController(ApplicationDbContext context,
+        public KnowledgeBasesController(ApplicationDbContext context,
                ISequenceService sequenceService,
                IStorageService storageService,
                ILogger<KnowledgeBasesController> logger,
                IEmailSender emailSender,
-               IViewRenderService viewRenderService)
+               IViewRenderService viewRenderService,
+               ICacheService cacheService)
           {
                _context = context;
                _sequenceService = sequenceService;
@@ -44,7 +46,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
                _logger = logger ?? throw new ArgumentNullException(nameof(logger));
                _emailSender = emailSender;
                _viewRenderService = viewRenderService;
-          }
+               _cacheService = cacheService; 
+        }
 
           [HttpPost]
           [ClaimRequirement(FunctionCode.CONTENT_KNOWLEDGEBASE, CommandCode.CREATE)]
@@ -82,6 +85,9 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
                if (result > 0)
                {
+                    await _cacheService.RemoveAsync(CacheConstants.LatestKnowledgeBases);
+                    await _cacheService.RemoveAsync(CacheConstants.PopularKnowledgeBases);
+
                     _logger.LogInformation("End PostKnowledgeBase API - Success");
 
                     return CreatedAtAction(nameof(GetById), new
@@ -119,40 +125,48 @@ namespace KnowledgeSpace.BackendServer.Controllers
           [AllowAnonymous]
           public async Task<IActionResult> GetLatestKnowledgeBases(int take)
           {
-               var knowledgeBases = from k in _context.KnowledgeBases
+                var cachedData = await _cacheService.GetAsync<List<KnowledgeBaseQuickVm>>(CacheConstants.LatestKnowledgeBases);
+                if (cachedData == null)
+                {
+                    var knowledgeBases = from k in _context.KnowledgeBases
                                     join c in _context.Categories on k.CategoryId equals c.Id
                                     orderby k.CreateDate descending
                                     select new { k, c };
 
-               var knowledgeBasevms = await knowledgeBases.Take(take)
-                  .Select(u => new KnowledgeBaseQuickVm()
-                  {
-                       Id = u.k.Id,
-                       CategoryId = u.k.CategoryId,
-                       Description = u.k.Description,
-                       SeoAlias = u.k.SeoAlias,
-                       Title = u.k.Title,
-                       CategoryAlias = u.c.SeoAlias,
-                       CategoryName = u.c.Name,
-                       NumberOfVotes = u.k.NumberOfVotes,
-                       CreateDate = u.k.CreateDate
-                  }).ToListAsync();
-
-               return Ok(knowledgeBasevms);
+                    var knowledgeBaseVms = await knowledgeBases.Take(take)
+                    .Select(u => new KnowledgeBaseQuickVm()
+                    {
+                         Id = u.k.Id,
+                         CategoryId = u.k.CategoryId,
+                         Description = u.k.Description,
+                         SeoAlias = u.k.SeoAlias,
+                         Title = u.k.Title,
+                         CategoryAlias = u.c.SeoAlias,
+                         CategoryName = u.c.Name,
+                         NumberOfVotes = u.k.NumberOfVotes,
+                         CreateDate = u.k.CreateDate
+                    }).ToListAsync();
+                    await _cacheService.SetAsync(CacheConstants.LatestKnowledgeBases, knowledgeBaseVms, 2);
+                    cachedData = knowledgeBaseVms;
+                }
+               return Ok(cachedData);
           }
 
           [HttpGet("popular/{take:int}")]
           [AllowAnonymous]
           public async Task<IActionResult> GetPopularKnowledgeBases(int take)
           {
-               var knowledgeBases = from k in _context.KnowledgeBases
-                                    join c in _context.Categories on k.CategoryId equals c.Id
-                                    orderby k.ViewCount descending
-                                    select new { k, c };
+            var cachedData = await _cacheService.GetAsync<List<KnowledgeBaseQuickVm>>(CacheConstants.PopularKnowledgeBases);
+            if (cachedData == null)
+            {
+                var knowledgeBases = from k in _context.KnowledgeBases
+                                     join c in _context.Categories on k.CategoryId equals c.Id
+                                     orderby k.ViewCount descending
+                                     select new { k, c };
 
-               var knowledgeBasevms = await knowledgeBases.Take(take)
-                   .Select(u => new KnowledgeBaseQuickVm()
-                   {
+                var knowledgeBaseVms = await knowledgeBases.Take(take)
+                    .Select(u => new KnowledgeBaseQuickVm()
+                    {
                         Id = u.k.Id,
                         CategoryId = u.k.CategoryId,
                         Description = u.k.Description,
@@ -162,10 +176,13 @@ namespace KnowledgeSpace.BackendServer.Controllers
                         CategoryName = u.c.Name,
                         NumberOfVotes = u.k.NumberOfVotes,
                         CreateDate = u.k.CreateDate
-                   }).ToListAsync();
+                    }).ToListAsync();
+                await _cacheService.SetAsync(CacheConstants.PopularKnowledgeBases, knowledgeBaseVms, 24);
+                cachedData = knowledgeBaseVms;
+            }
 
-               return Ok(knowledgeBasevms);
-          }
+            return Ok(cachedData);
+        }
 
 
           [HttpGet("filter")]
@@ -265,6 +282,8 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
                if (result > 0)
                {
+                    await _cacheService.RemoveAsync("LatestKnowledgeBases");
+                    await _cacheService.RemoveAsync("PopularKnowledgeBases");
                     return NoContent();
                }
                return BadRequest(new ApiBadRequestResponse($"Update knowledge base failed"));

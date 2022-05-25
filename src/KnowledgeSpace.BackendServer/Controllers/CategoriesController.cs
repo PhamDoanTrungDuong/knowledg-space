@@ -3,6 +3,7 @@ using KnowledgeSpace.BackendServer.Constants;
 using KnowledgeSpace.BackendServer.Data;
 using KnowledgeSpace.BackendServer.Data.Entities;
 using KnowledgeSpace.BackendServer.Helpers;
+using KnowledgeSpace.BackendServer.Services;
 using KnowledgeSpace.ViewModels;
 using KnowledgeSpace.ViewModels.Contents;
 using Microsoft.AspNetCore.Authorization;
@@ -19,10 +20,12 @@ namespace KnowledgeSpace.BackendServer.Controllers
     public class CategoriesController : BaseController
     {
         private readonly ApplicationDbContext _context;
+        private readonly ICacheService _cacheService;
 
-        public CategoriesController(ApplicationDbContext context)
+        public CategoriesController(ApplicationDbContext context, ICacheService cacheService)
         {
             _context = context;
+            _cacheService = cacheService;
         }
 
         [HttpPost]
@@ -43,6 +46,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
             if (result > 0)
             {
+                await _cacheService.RemoveAsync("Categories");
                 return CreatedAtAction(nameof(GetById), new { id = category.Id }, request);
             }
             else
@@ -55,11 +59,17 @@ namespace KnowledgeSpace.BackendServer.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetCategories()
         {
-            var categorys = await _context.Categories.ToListAsync();
+            var cachedData = await _cacheService.GetAsync<List<CategoryVm>>("Categories");
+            if (cachedData == null)
+            {
+                var categorys = await _context.Categories.ToListAsync();
 
-            var categoryvms = categorys.Select(c => CreateCategoryVm(c)).ToList();
+                var categoryVms = categorys.Select(c => CreateCategoryVm(c)).ToList();
+                await _cacheService.SetAsync("Categories", categoryVms);
+                cachedData = categoryVms;
+            }
 
-            return Ok(categoryvms);
+            return Ok(cachedData);
         }
 
         [HttpGet("filter")]
@@ -124,6 +134,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
 
             if (result > 0)
             {
+                await _cacheService.RemoveAsync("Categories");
                 return NoContent();
             }
             return BadRequest(new ApiBadRequestResponse("Update category failed"));
@@ -141,6 +152,7 @@ namespace KnowledgeSpace.BackendServer.Controllers
             var result = await _context.SaveChangesAsync();
             if (result > 0)
             {
+                 await _cacheService.RemoveAsync("Categories");
                 CategoryVm categoryvm = CreateCategoryVm(category);
                 return Ok(categoryvm);
             }
