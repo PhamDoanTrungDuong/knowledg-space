@@ -14,12 +14,8 @@ namespace KnowledgeSpace.WebPortal.Helpers
     {
         private const string Letters = "2346789ABCDEFGHJKLMNPRTUVWXYZ";
 
-          /**
-           * Generate a random captcha code.
-           *
-           * @param length
-           * @return
-           */
+        /** 
+        */
         public static string GenerateCaptchaCode()
         {
             Random rand = new Random();
