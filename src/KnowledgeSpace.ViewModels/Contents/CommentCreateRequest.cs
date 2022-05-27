@@ -14,5 +14,7 @@ namespace KnowledgeSpace.ViewModels.Contents
 
         public int? ReplyId { get; set; }
 
+        public string CaptchaCode { get; set; }
+
     }
 }

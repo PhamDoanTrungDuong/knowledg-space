@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KnowledgeSpace.ViewModels.Contents;
 using KnowledgeSpace.WebPortal.Extensions;
+using KnowledgeSpace.WebPortal.Helpers;
 using KnowledgeSpace.WebPortal.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -68,6 +69,12 @@ namespace KnowledgeSpace.WebPortal.Controllers
                     return BadRequest();
                }
 
+               if (!Captcha.ValidateCaptchaCode(request.CaptchaCode, HttpContext))
+               {
+                    ModelState.AddModelError("", "Mã xác nhận không đúng");
+                    return BadRequest(ModelState);
+               }
+
                var result = await _knowledgeBaseApiClient.PostKnowlegdeBase(request);
                if (result)
                {
@@ -82,6 +89,12 @@ namespace KnowledgeSpace.WebPortal.Controllers
                if (!ModelState.IsValid)
                {
                     return BadRequest();
+               }
+
+                if (!Captcha.ValidateCaptchaCode(request.CaptchaCode, HttpContext))
+               {
+                    ModelState.AddModelError("", "Mã xác nhận không đúng");
+                    return BadRequest(ModelState);
                }
 
                var result = await _knowledgeBaseApiClient.PutKnowlegdeBase(request.Id.Value, request);

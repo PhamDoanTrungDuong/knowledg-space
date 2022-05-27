@@ -23,10 +23,30 @@
                     ownerName: $('#hid_current_login_name').val()
                 });
                 $("#txt_new_comment_content").val('');
+                $("#txt_captcha").val('');
+
                 $('#comment_list').prepend(newComment);
                 var numberOfComments = parseInt($('#hid_number_comments').val()) + 1;
                 $('#hid_number_comments').val(numberOfComments);
                 $('#comments-title').text('(' + numberOfComments + ') bình luận');
+
+                $('#message-result').removeClass('alert-danger')
+                    .addClass('alert-success')
+                    .html('Bình luận thành công')
+                    .show();
+            }).error(function (err) {
+                $('#message-result').html('');
+                if (err.status === 400 && err.responseText) {
+                    var errMsgs = JSON.parse(err.responseText);
+                    for (field in errMsgs) {
+                        $('#message-result').append(errMsgs[field] + '<br>');
+                    }
+                    $('#message-result')
+                        .removeClass('alert-success"')
+                        .addClass('alert-danger')
+                        .show();
+                    resetCaptchaImage('img-captcha');
+                }
             });
         });
 
@@ -60,6 +80,7 @@
                     //Reset reply comment
                     $("#txt_reply_content_" + commentId).val('');
                     $('#reply_comment_' + commentId).html('');
+                    $('#txt_captcha_reply_' + commentId).html('');
 
                     //Prepend new comment to children
                     $('#children_comments_' + commentId).prepend(newComment);
@@ -68,10 +89,27 @@
                     var numberOfComments = parseInt($('#hid_number_comments').val()) + 1;
                     $('#hid_number_comments').val(numberOfComments);
                     $('#comments-title').text('(' + numberOfComments + ') bình luận');
+
+                    $('#message-result-reply-' + commentId).removeClass('alert-danger')
+                        .addClass('alert-success')
+                        .html('Bình luận thành công')
+                        .show();
+                }).error(function (err) {
+                    $('#message-result-reply-' + commentId).html('');
+                    if (err.status === 400 && err.responseText) {
+                        var errMsgs = JSON.parse(err.responseText);
+                        for (field in errMsgs) {
+                            $('#message-result-reply-' + commentId).append(errMsgs[field] + '<br>');
+                        }
+                        $('#message-result-reply-' + commentId)
+                            .removeClass('alert-success"')
+                            .addClass('alert-danger')
+                            .show();
+                        resetCaptchaImage('img-captcha-reply-' + commentId);
+                    }
                 });
             });
         });
-
         $('#frm_vote').submit(function (e) {
             e.preventDefault();
             var form = $(this);
@@ -80,7 +118,6 @@
                 $('.like-count').text(response);
             });
         });
-
         $('#frm_vote .like-it').click(function () {
             $('#frm_vote').submit();
         });
@@ -92,7 +129,32 @@
                 .done(function () {
                     $('#reportModal').modal('hide');
                     $('#txt_report_content').val('');
+                }).error(function (err) {
+                    $('#message-result-report').html('');
+                    if (err.status === 400 && err.responseText) {
+                        var errMsgs = JSON.parse(err.responseText);
+                        for (field in errMsgs) {
+                            $('#message-result-report').append(errMsgs[field] + '<br>');
+                        }
+                        $('#message-result-report')
+                            .removeClass('alert-success"')
+                            .addClass('alert-danger')
+                            .show();
+                        resetCaptchaImage('img-captcha-report');
+                    }
                 });
+        });
+
+        $("#img-captcha").click(function () {
+            resetCaptchaImage('img-captcha');
+        });
+        $('body').on('click', '.img-captcha', function (e) {
+            var id = $(this).data('id');
+            resetCaptchaImage('img-captcha-reply-' + id);
+        });
+
+        $('body').on('click', '#img-captcha-report', function (e) {
+            resetCaptchaImage('img-captcha-report');
         });
     }
 
@@ -108,7 +170,7 @@
                         if (item.children.length > 0) {
                             $.each(item.children, function (childIndex, childItem) {
                                 childrenHtml += Mustache.render(childrenTemplate, {
-                                    id: item.id,
+                                    id: childItem.id,
                                     content: childItem.content,
                                     createDate: formatRelativeTime(childItem.createDate),
                                     ownerName: childItem.ownerName
@@ -127,5 +189,10 @@
                 }
             }
         });
+    }
+
+    function resetCaptchaImage(id) {
+        d = new Date();
+        $("#" + id).attr("src", "/get-captcha-image?" + d.getTime());
     }
 };
