@@ -47,6 +47,7 @@ namespace KnowledgeSpace.BackendServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseKestrel(c => c.AddServerHeader = false);
                 });
     }
 }
