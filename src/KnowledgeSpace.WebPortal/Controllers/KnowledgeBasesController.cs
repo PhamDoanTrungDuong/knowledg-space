@@ -91,15 +91,21 @@ namespace KnowledgeSpace.WebPortal.Controllers
                return View(viewModel);
           }
 
-          #region AJAX Methods
+        #region AJAX Methods
 
-          public async Task<IActionResult> GetCommentByKnowledgeBaseId(int knowledgeBaseId)
-          {
-               var data = await _knowledgeBaseApiClient.GetCommentsTree(knowledgeBaseId);
-               return Ok(data);
-          }
+        public async Task<IActionResult> GetCommentsByKnowledgeBaseId(int knowledgeBaseId, int pageIndex = 1, int pageSize = 2)
+        {
+            var data = await _knowledgeBaseApiClient.GetCommentsTree(knowledgeBaseId, pageIndex, pageSize);
+            return Ok(data);
+        }
 
-          [HttpPost]
+        public async Task<IActionResult> GetRepliedCommentsByKnowledgeBaseId(int knowledgeBaseId, int rootCommentId, int pageIndex = 1, int pageSize = 2)
+        {
+            var data = await _knowledgeBaseApiClient.GetRepliedComments(knowledgeBaseId, rootCommentId, pageIndex, pageSize);
+            return Ok(data);
+        }
+
+        [HttpPost]
           public async Task<IActionResult> AddNewComment([FromForm] CommentCreateRequest request)
           {
                if (!ModelState.IsValid)

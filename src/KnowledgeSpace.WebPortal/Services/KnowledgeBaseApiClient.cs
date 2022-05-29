@@ -189,5 +189,15 @@ namespace KnowledgeSpace.WebPortal.Services
           {
                return await PostAsync<ReportCreateRequest, ReportVm>($"/api/knowledgeBases/{request.KnowledgeBaseId}/reports", request);
           }
-     }
+
+        public async Task<Pagination<CommentVm>> GetCommentsTree(int knowledgeBaseId, int pageIndex, int pageSize)
+        {
+            return await GetAsync<Pagination<CommentVm>>($"/api/knowledgeBases/{knowledgeBaseId}/comments/tree?pageIndex={pageIndex}&pageSize={pageSize}");
+        }
+
+        public async Task<Pagination<CommentVm>> GetRepliedComments(int knowledgeBaseId, int rootCommentId, int pageIndex, int pageSize)
+        {
+            return await GetAsync<Pagination<CommentVm>>($"/api/knowledgeBases/{knowledgeBaseId}/comments/{rootCommentId}/replied?pageIndex={pageIndex}&pageSize={pageSize}");
+        }
+    }
 }
