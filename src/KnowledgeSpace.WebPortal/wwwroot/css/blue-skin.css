@@ -3,7 +3,7 @@
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* Header ---------------------------------------------------------------------------------------------------------*/
 .header-wrapper {
-  background-color: #6392C6;
+  background-color: #a2b9ee;
 }
 
 span.tag-line {
@@ -12,21 +12,27 @@ span.tag-line {
 
 .main-nav div > ul > li a {
   color: #E3EDF8;
+  font-size: 16px;
+}
+
+.main-nav div > ul > li a:hover {
+  color: #fff;
+  transition: .3s all ease;
 }
 
 .main-nav .sub-menu li {
   background-color: #4A7AAF;
 }
 .main-nav .sub-menu li:hover {
-  background-color: #3b618b;
+  background-color: #5079a7;
 }
 
 .search-area-wrapper {
-  background-image: url("blue-skin/blue-bg.jpg");
+  background-image: url("./blue-skin/blue-bg.jpg");
   background-color: #4c4a77;
 }
 .search-area-wrapper form.search-form input.search-btn {
-  background-color: #6392C6;
+  background-color: #7db7e3;
 }
 .search-area-wrapper form.search-form input.search-btn:hover {
   background-color: #588ac2;
@@ -42,7 +48,7 @@ span.tag-line {
 }
 
 #footer .widget {
-  color: #7E95AF;
+  color: #fff;
 }
 
 #footer .widget a {
@@ -50,7 +56,7 @@ span.tag-line {
 }
 
 #footer .widget ul li {
-  border-color: #3E5064;
+  border-color: #fff;
 }
 
 #footer .widget #twitter_update_list > ul > li span {
@@ -58,7 +64,7 @@ span.tag-line {
 }
 
 #footer-bottom .copyright {
-  color: #6F839B;
+  color: #fff;
 }
 
 .flickr-photos img {
@@ -97,8 +103,9 @@ span.tag-line {
 }
 
 a#scroll-top {
-  background-color: #4278b4;
+  background-color: #ADEEE2;
 }
 a#scroll-top:hover {
+  transition: .3s all ease;
   background-color: #5085bf;
 }

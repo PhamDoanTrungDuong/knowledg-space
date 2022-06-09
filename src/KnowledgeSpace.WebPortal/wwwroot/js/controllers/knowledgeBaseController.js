@@ -113,7 +113,7 @@
         $('#frm_vote').submit(function (e) {
             e.preventDefault();
             var form = $(this);
-            $.post('/knowledgeBase/postVote', form.serialize()).done(function (response) {
+            $.post('/knowledgeBases/postVote', form.serialize()).done(function (response) {
                 $('.like-it').text(response);
                 $('.like-count').text(response);
             });

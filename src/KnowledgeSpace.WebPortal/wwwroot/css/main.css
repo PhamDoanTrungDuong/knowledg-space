@@ -181,6 +181,11 @@ form.search-form .input-common, form.search-form input.search-term, form.search-
   border: none;
   vertical-align: bottom;
 }
+
+form.search-form input.search-term:focus{
+  border: 1px solid rgb(88, 85, 85)
+}
+
 form.search-form input.search-term {
   font-size: 14px;
   height: 48px;
@@ -203,7 +208,8 @@ form.search-form input.search-btn {
   font-weight: 600;
   padding: 14px 30px 15px;
   color: #fff;
-  border-radius: 6px; 
+  border-radius: 6px;
+  transition: .3s all ease;
 }
 form.search-form input.search-btn:hover {
   background-color: #4b5760;
@@ -450,6 +456,7 @@ li.comment > article .avatar {
 
 .support-widget {
   border: 1px solid #e9e6c4;
+  border-radius: 10px;
   padding: 10px 100px 10px 20px;
   background: #fefbdc url("../images/support.png") no-repeat 95% 20px;
   margin-bottom: 20px;
@@ -461,6 +468,7 @@ li.comment > article .avatar {
 
 .quick-links-widget {
   border: 1px solid #d7d9dc;
+  border-radius: 10px;
   padding: 10px 15px 15px;
 }
 .quick-links-widget h3 {
@@ -911,13 +919,13 @@ input[type=text].error,
 }
 
 #footer .widget {
-  color: #8f98a0;
+  color: #fff;
 }
 #footer .widget h3 {
   color: #fff;
 }
 #footer .widget a {
-  color: #ddd;
+  color: #fff;
 }
 #footer .widget a:hover {
   color: #fff;
@@ -935,7 +943,7 @@ input[type=text].error,
 
 } */
 #footer .widget ul li {
-  border-bottom: 1px solid #535b61;
+  border-bottom: 1px solid #fff;
 }
 #footer .widget ul li:last-child {
   border-bottom: none;

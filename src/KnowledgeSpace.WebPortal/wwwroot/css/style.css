@@ -10,14 +10,26 @@
 	Tags: custom-background, threaded-comments, translation-ready, white, one-column, two-columns, three-columns, four-columns, custom-menu, theme-options, flexible-width, full-width-template, featured-images, right-sidebar
 
 	----------------------------------------------------------------------------------------------------------------*/
+
 .body-section {
   padding: 10px 0px;
-}
-.body-section a.new-kb {
-  width: 94%;
-  height: 32px;
+  background-color: #adeee2 !important;
   font-size: 20px;
-  padding: 10px 10px 0px 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid #adeee2;
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+}
+
+.body-section {
+  color: white;
+}
+
+.body-section:hover {
+  color: #9a9cea;
+  transition: 0.3s all ease-in;
 }
 
 .field-validation-error {
@@ -37,15 +49,15 @@
 }
 
 .text-area {
-	width: 100%;
- }
- input[name='captchaCode'] {
-	vertical-align: middle;
-	margin-top: 10px;
-	height: 23px;
-	width: 90px;
- }
+  width: 100%;
+}
+input[name="captchaCode"] {
+  vertical-align: middle;
+  margin-top: 10px;
+  height: 23px;
+  width: 90px;
+}
 
- .input-group-prepend {
-	display: inline;
- }
+.input-group-prepend {
+  display: inline;
+}
